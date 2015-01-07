@@ -1,0 +1,172 @@
+/**
+ * CSS Style
+ * http://pmav.eu
+ * 07/Jul/2013
+*/
+
+* {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;
+}
+
+body {
+    font: 14px "Arial", sans-serif;
+    color: #000000;
+}
+
+a {
+    color: #0000FF;
+}
+
+a:hover {
+    color: #000000;
+}
+
+a:target {
+    background: #FFFF00;
+}
+
+cite, pre {
+    border-left: 1px solid #DDDDDD;
+    padding: 2px 0 2px 10px;
+    background: #EEEEEE;
+}
+
+cite {
+    font: italic 14px/20px "Georgia", serif;
+    display: block;
+}
+
+ul {
+    list-style: square;
+	line-height: 20px;
+}
+
+code {
+ border: 1px solid #DDD;
+ padding: 2px 4px;
+ background: #FFF;
+}
+
+img {
+ border: 1px solid #DDD;
+ background: #FFF;
+ padding: 4px;
+}
+
+/* -------------------------------------- */
+
+form fieldset {
+    border: 1px solid #DDD;
+    margin-bottom: 10px;
+    background: #EEE;
+    width: 387px;
+}
+
+form fieldset legend
+{
+    font-size: 16px;
+}
+
+form input, form textarea, form select {
+  color: #000000;
+  border: 1px solid #000000;
+  padding: 4px;
+  font: 16px "Arial", sans-serif;
+  letter-spacing: 0;
+
+  border-top: 1px solid #AAA;
+  border-left: 1px solid #AAA;
+
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+}
+
+
+form input.submit {
+  font-weight: bold;
+  background: #FFFFFF;
+  cursor: pointer;
+  padding: 6px;
+}
+
+
+form input.submit:hover {
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
+
+  border-right: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+}
+/* -------------------------------------- */
+
+#wrapper {
+    margin: auto;
+    width: 800px;
+}
+
+/* -------------------------------------- */
+
+#header {
+    border-bottom: 4px solid #000000;
+    margin: 20px 0;
+}
+
+#header h1 {
+    margin: 0;
+}
+
+
+#header h1 a {
+    text-decoration: none;
+    color: #000;
+}
+
+/* -------------------------------------- */
+
+#main .box {
+    border: 1px solid #DDDDDD;
+    background: #F5F5F5;
+    margin: 0 0 20px 0;
+    padding: 6px;
+}
+
+#main .box h2 {
+    border-bottom: 1px solid #BBBBBB;
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+#main .box h4 {
+    border-bottom: 1px solid #DDDDDD;
+    font-size: 16px;
+    margin: 0;
+}
+
+#main .box p, #main .box cite {
+    margin: 3px 0 3px 0;
+}
+
+
+#main .box div.text-end p {
+    margin: 4px 0 6px 0;
+}
+
+#main .box .text, #main .box .text-end {
+    margin: 40px 0 0 0;
+}
+/* -------------------------------------- */
+
+#controls div
+{
+    margin-top: 4px;
+}
+
+/* -------------------------------------- */
+
+#footer {
+    border-top: 1px solid #000000;
+    padding: 2px 0;
+    margin: 20px 0;
+}

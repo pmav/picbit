@@ -1,0 +1,25 @@
+#drop-zone {  
+  background: #CCCCCC;
+  text-align: center;
+  line-height: 100px;
+  font-size: 20px;
+}
+
+.drop-zone-hover {
+    background: #B30000 !important;
+}
+
+#canvas-container {
+   width: 100%;
+   text-align:center;
+}
+
+#canvas-container img {
+    border: 0;
+    padding: 0;
+}
+
+canvas {
+    margin: auto;
+    display: inline;
+}

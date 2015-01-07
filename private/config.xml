@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <name>Picbit v1.0</name>
+  <date>05/Jan/2015</date>
+  <description>Picbit - javascript image processing</description>
+  <tags>
+    <tag>picbit</tag>
+    <tag>image</tag>
+    <tag>javascript</tag>
+    <tag>processing</tag>
+  </tags>
+</project>
