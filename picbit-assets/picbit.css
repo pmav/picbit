@@ -2,24 +2,41 @@
   background: #CCCCCC;
   text-align: center;
   line-height: 100px;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 6px 0 0 0;
 }
 
 .drop-zone-hover {
     background: #B30000 !important;
 }
 
+canvas {
+  display: none;
+  height: 0;
+}
+
 #canvas-container {
-   width: 100%;
-   text-align:center;
+   text-align: center;
+   margin: 0;
+   padding: 0;
 }
 
 #canvas-container img {
     border: 0;
     padding: 0;
+    vertical-align: middle;
 }
 
-canvas {
-    margin: auto;
-    display: inline;
+.form {
+  padding: 4px;
+  display: inline-block;
+  background: #CCC;
+  font-weight: bold;
+  margin: 6px 0 0 0;
+}
+
+.form span {
+  border-bottom: 1px dotted black;
+  cursor: help;
 }

@@ -1,13 +1,17 @@
 
 $(document).ready(function() {
     PICBIT.main();
+    PICBIT.loadInitialImage();
 });
 
-var palette2 = [ [0, 0, 0, 255], [255, 255, 255, 255] ];
+var palette1 = [
+    [0,     0,   0],
+    [255, 255, 255]
+];
 
 var palette = [
-    [17, 56, 17],
-    [50, 98, 50],
+    [17,   56, 17],
+    [50,   98, 50],
     [139, 171, 36],
     [155, 187, 39]
 ];
@@ -15,6 +19,7 @@ var palette = [
 var PICBIT = {
 
     constants : {
+        initialImageElement : '#initial-image',
         dropZoneElement : '#drop-zone',
         dropZoneHoverClass : '.drop-zone-hover',
 
@@ -29,6 +34,13 @@ var PICBIT = {
             e.on('dragexit', PICBIT.handlers.dragEnterExit);
             e.on('dragover', PICBIT.handlers.dragOver);
             e.on('drop', PICBIT.handlers.dragDrop);
+        }
+    },
+
+    loadInitialImage : function() {
+        var img = $(PICBIT.constants.initialImageElement).get(0);
+        img.onload = function() {
+            PICBIT.transform.main1(img);
         }
     },
 
@@ -67,47 +79,51 @@ var PICBIT = {
         loadEnd : function(e, file) {
             var img = document.createElement('img');
             img.src = this.result;
-            
-            img.onload = function()
-            {
-                var newW = img.width;
-                var newH = img.height;
-                
-                // Resize image, if needed.
-
-                var s = PICBIT.constants.maxImageSize;
-
-                if (newW > s)
-                {
-                    newW = s;
-                    newH = Math.ceil(img.height * (newW / img.width)); // Ajust height.
-                }
-
-                if (newH > s)
-                {
-                    newH = s;
-                    newW = Math.ceil(img.width * (newH / img.height)); // Ajust width.
-                }
-
-                // Crop image to be a multiple of step.
-
-                newW = newW - (newW % PICBIT.constants.pixelSize);
-                newH = newH - (newH % PICBIT.constants.pixelSize);
-
-                // Set loaded image.
-
-                var canvas = document.getElementById('c'); // TODO Ref.
-                var context = canvas.getContext('2d');
-                context.canvas.width = newW;
-                context.canvas.height = newH;
-                context.drawImage(img, 0, 0, newW, newH);
-
-                PICBIT.transform.main(img, context);
+            img.onload = function() {
+                PICBIT.transform.main1(img);
             }
         }
     },
 
     transform : {
+
+        main1 : function(img)
+        {
+            var newW = img.width;
+            var newH = img.height;
+            
+            // Resize image, if needed.
+
+            var s = PICBIT.constants.maxImageSize;
+
+            if (newW > s)
+            {
+                newW = s;
+                newH = Math.ceil(img.height * (newW / img.width)); // Ajust height.
+            }
+
+            if (newH > s)
+            {
+                newH = s;
+                newW = Math.ceil(img.width * (newH / img.height)); // Ajust width.
+            }
+
+            // Crop image to be a multiple of step.
+
+            newW = newW - (newW % PICBIT.constants.pixelSize);
+            newH = newH - (newH % PICBIT.constants.pixelSize);
+
+            // Set loaded image.
+
+            var canvas = document.getElementById('canvas'); // TODO Ref.
+            var context = canvas.getContext('2d');
+            context.canvas.width = newW;
+            context.canvas.height = newH;
+            context.drawImage(img, 0, 0, newW, newH);
+
+            PICBIT.transform.main(img, context);
+        },
+
         main : function(img, ctx)
         {
             var w = ctx.canvas.width;
