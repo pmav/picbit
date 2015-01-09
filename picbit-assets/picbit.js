@@ -35,6 +35,17 @@ var PICBIT = {
             e.on('dragover', PICBIT.handlers.dragOver);
             e.on('drop', PICBIT.handlers.dragDrop);
         }
+
+        $('#draw').click(function() {
+            var img = $(PICBIT.constants.initialImageElement).get(0);
+            PICBIT.transform.main1(img);
+        });
+
+        $('#pixel-size-select').change(function() {
+            PICBIT.constants.pixelSize = parseInt($(this).val(), 10);
+            var img = $(PICBIT.constants.initialImageElement).get(0);
+            PICBIT.transform.main1(img);
+        });
     },
 
     loadInitialImage : function() {
@@ -82,6 +93,9 @@ var PICBIT = {
             img.onload = function() {
                 PICBIT.transform.main1(img);
             }
+
+            var img1 = $(PICBIT.constants.initialImageElement).get(0);
+            img1.src = this.result;
         }
     },
 
@@ -89,6 +103,8 @@ var PICBIT = {
 
         main1 : function(img)
         {
+            var start = new Date().getTime();
+
             var newW = img.width;
             var newH = img.height;
             
@@ -122,6 +138,11 @@ var PICBIT = {
             context.drawImage(img, 0, 0, newW, newH);
 
             PICBIT.transform.main(img, context);
+
+            var end = new Date().getTime();
+            var time = end - start;
+            
+            $('#time').text(time + 'ms');
         },
 
         main : function(img, ctx)
@@ -243,7 +264,6 @@ var PICBIT = {
             imageData.data[index + 2] = p[2];
             imageData.data[index + 3] = p[3];
         }
-
     }
 };
 

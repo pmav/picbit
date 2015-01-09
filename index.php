@@ -48,9 +48,10 @@
                 <span title="xx">Pixel Size</span>&nbsp;
                 <select id="pixel-size-select">
                     <option value="1">1px</option>
-                    <option value="1">2px</option>
+                    <option value="2">2px</option>
                     <option value="4" selected="selected">4px</option>
                     <option value="8">8px</option>
+                    <option value="12">12px</option>
                 </select>
             </div>
 
@@ -78,6 +79,9 @@
                 </select>
             </div>
 
+<button id="draw">Draw</button>
+
+<span id="time"></span>
         </div>
 
         <div class="box">
