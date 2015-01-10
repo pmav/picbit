@@ -1,14 +1,6 @@
-#drop-zone {  
-  background: #CCCCCC;
-  text-align: center;
-  line-height: 100px;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 6px 0 0 0;
-}
-
-.drop-zone-hover {
-    background: #B30000 !important;
+#drop-zone.drop-zone-hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  
 }
 
 canvas {

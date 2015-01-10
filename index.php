@@ -34,19 +34,19 @@
             <p>All the processing being made is pixel oriented and no frameworks are used, except jQuery for basic manipulation of UI elements.</p>
         </div>
 
-        <div class="box">
+        <div class="box" id="drop-zone">
 
             <div id="canvas-container">
+                <!-- <div id="drop-zone"></div> -->
+
                 <img id="initial-image" src="test-images/01.png" style="display: none;" />
                 <img id="export-image" />
                 <canvas id="canvas"></canvas>
             </div>
 
-            <div id="drop-zone">Drop an image here</div>
-        
             <div class="form">
                 <span title="xx">Pixel Size</span>&nbsp;
-                <select id="pixel-size-select">
+                <select id="select-pixel-size">
                     <option value="1">1px</option>
                     <option value="2">2px</option>
                     <option value="4" selected="selected">4px</option>
@@ -64,11 +64,11 @@
             </div>
 
             <div class="form">
-                <span title="xx">Pixel Agregation</span>&nbsp;
-                <select id="palette-select">
+                <span title="xx">Pixel Aggregation</span>&nbsp;
+                <select id="select-pixel-aggregation-method">
                     <option value="1" selected="selected">Average</option>
-                    <option value="2">Minimum</option>
-                    <option value="3">Maximum</option>
+                    <option value="2">Lighter</option>
+                    <option value="3">Darker</option>
                 </select>
             </div>
 

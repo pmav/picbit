@@ -4,52 +4,74 @@ $(document).ready(function() {
     PICBIT.loadInitialImage();
 });
 
-var palette1 = [
-    [0,     0,   0],
-    [255, 255, 255]
-];
-
-var palette = [
-    [17,   56, 17],
-    [50,   98, 50],
-    [139, 171, 36],
-    [155, 187, 39]
-];
-
 var PICBIT = {
 
-    constants : {
+    config : {
+        /**
+         *
+         */
         initialImageElement : '#initial-image',
-        dropZoneElement : '#drop-zone',
-        dropZoneHoverClass : '.drop-zone-hover',
 
-        maxImageSize : 786,
-        pixelSize : 4
+        /**
+         *
+         */
+        dropZoneElement : '#export-image',
+        
+        /**
+         *
+         */
+        dropZoneHoverClass : '.drop-zone-hover',
+        
+        /**
+         * Max image width.
+         */
+        maxImageWidth : 786,
+        
+        /**
+         * Curretn pixel size.
+         */
+        pixelSize : 4,
+        
+        /**
+         * Current pixel aggregation method.
+         */
+        pixelAggregationMethod : 1,
+
+        /**
+         *
+         */
+        palette : {
+            blackAndWhite : [
+                [0,     0,   0],
+                [255, 255, 255]
+            ],
+
+            gameBoy : [
+                [17,   56, 17],
+                [50,   98, 50],
+                [139, 171, 36],
+                [155, 187, 39]
+            ]
+        }
     },
 
     main : function() {
-        if(window.FileReader) {
-            var e = $('#drop-zone'); // TODO Move ref.
-            e.on('dragenter', PICBIT.handlers.dragEnterExit);
-            e.on('dragexit', PICBIT.handlers.dragEnterExit);
-            e.on('dragover', PICBIT.handlers.dragOver);
-            e.on('drop', PICBIT.handlers.dragDrop);
-        }
+        if(!window.FileReader)
+            return;
 
-        $('#draw').click(function() {
-            var img = $(PICBIT.constants.initialImageElement).get(0);
-            PICBIT.transform.main1(img);
-        });
+        var dropZone = $(PICBIT.config.dropZoneElement);
+        dropZone.on('dragenter', PICBIT.handlers.dragEnter);
+        dropZone.on('dragexit', PICBIT.handlers.dragExit);
+        dropZone.on('dragover', PICBIT.handlers.dragOver);
+        dropZone.on('drop', PICBIT.handlers.dragDrop);
 
-        $('#pixel-size-select').change(function() {
-            PICBIT.constants.pixelSize = parseInt($(this).val(), 10);
-            var img = $(PICBIT.constants.initialImageElement).get(0);
-            PICBIT.transform.main1(img);
-        });
+        $('#draw').click(PICBIT.handlers.redraw); // TODO Remove.
+        $('#select-pixel-aggregation-method').change(PICBIT.handlers.redraw);
+        $('#select-pixel-size').change(PICBIT.handlers.redraw);
     },
 
     loadInitialImage : function() {
-        var img = $(PICBIT.constants.initialImageElement).get(0);
+        var img = $(PICBIT.config.initialImageElement).get(0);
         img.onload = function() {
             PICBIT.transform.main1(img);
         }
@@ -57,9 +79,17 @@ var PICBIT = {
 
     handlers : {
 
-        dragEnterExit : function(e) {
+        dragEnter : function(e) {
             e.preventDefault();
-            $('#drop-zone').toggleClass('drop-zone-hover'); // TODO Move ref.
+            $('#drop-zone').addClass('drop-zone-hover'); // TODO Move ref.
+            //$('#drop-zone').text('Drop your image!');
+            return false;
+        },
+
+        dragExit : function(e) {
+            e.preventDefault();
+            $('#drop-zone').removeClass('drop-zone-hover'); // TODO Move ref.
+            //$('#drop-zone').text('');
             return false;
         },
 
@@ -71,7 +101,9 @@ var PICBIT = {
         dragDrop : function(e) {
             e.preventDefault();
 
-            $('#drop-zone').toggleClass('drop-zone-hover'); // TODO Move ref.
+            $('#drop-zone').removeClass('drop-zone-hover'); // TODO Move ref.
+            //$('#drop-zone').text('');
+
             var files = e.originalEvent.dataTransfer.files;
             
             for (var i = 0; i < files.length; i++) {
@@ -94,8 +126,16 @@ var PICBIT = {
                 PICBIT.transform.main1(img);
             }
 
-            var img1 = $(PICBIT.constants.initialImageElement).get(0);
+            var img1 = $(PICBIT.config.initialImageElement).get(0);
             img1.src = this.result;
+        },
+
+        redraw : function() {
+            PICBIT.config.pixelSize = parseInt($('#select-pixel-size').val(), 10);
+            PICBIT.config.pixelAggregationMethod = parseInt($('#select-pixel-aggregation-method').val(), 10);
+
+            var img = $(PICBIT.config.initialImageElement).get(0);
+            PICBIT.transform.main1(img);
         }
     },
 
@@ -110,24 +150,16 @@ var PICBIT = {
             
             // Resize image, if needed.
 
-            var s = PICBIT.constants.maxImageSize;
-
-            if (newW > s)
+            if (newW > PICBIT.config.maxImageWidth)
             {
-                newW = s;
+                newW = PICBIT.config.maxImageWidth;
                 newH = Math.ceil(img.height * (newW / img.width)); // Ajust height.
-            }
-
-            if (newH > s)
-            {
-                newH = s;
-                newW = Math.ceil(img.width * (newH / img.height)); // Ajust width.
             }
 
             // Crop image to be a multiple of step.
 
-            newW = newW - (newW % PICBIT.constants.pixelSize);
-            newH = newH - (newH % PICBIT.constants.pixelSize);
+            newW = newW - (newW % PICBIT.config.pixelSize);
+            newH = newH - (newH % PICBIT.config.pixelSize);
 
             // Set loaded image.
 
@@ -142,7 +174,7 @@ var PICBIT = {
             var end = new Date().getTime();
             var time = end - start;
             
-            $('#time').text(time + 'ms');
+            $('#time').text(time + 'ms' + ' / '+ Math.floor((newW * newW) / 1000) + ' K pixels');
         },
 
         main : function(img, ctx)
@@ -162,7 +194,7 @@ var PICBIT = {
 
         copy : function(initialImageData, finalImageData, w, h)
         {
-            var step = PICBIT.constants.pixelSize;
+            var step = PICBIT.config.pixelSize;
 
             for (var x = 0; x < w; x += step)
             {
@@ -197,27 +229,89 @@ var PICBIT = {
             }
         },
 
+        aggregation : 
+        {
+            average : function(points) {
+                var r = 0,
+                    g = 0,
+                    b = 0,
+                    t = points.length;
+
+                for (var i = 0; i < t; i++)
+                {
+                    r += points[i][0];
+                    g += points[i][1];
+                    b += points[i][2];
+                }
+
+                r = Math.ceil(r / t);
+                g = Math.ceil(g / t);
+                b = Math.ceil(b / t);
+
+                return [r, g, b, 255];
+            },
+            
+            darker : function(points) {
+                var c,
+                    cs = Number.MAX_VALUE,
+                    t = points.length;
+
+                for (var i = 0; i < t; i++)
+                {
+                    var t1 = (points[i][0] + points[i][1] + points[i][2]) / 3;
+                    if (t1 < cs)
+                    {
+                        c = points[i];
+                        cs = t1;
+                    }
+                }
+
+                return [c[0], c[1], c[2], 255];
+            },
+            
+            lighter : function(points) {
+                var c,
+                    cs = Number.MIN_VALUE,
+                    t = points.length;
+
+                for (var i = 0; i < t; i++)
+                {
+                    var t1 = (points[i][0] + points[i][1] + points[i][2]) / 3;
+                    if (t1 > cs)
+                    {
+                        c = points[i];
+                        cs = t1;
+                    }
+                }
+
+                return [c[0], c[1], c[2], 255];
+            }
+        },
+
         transformPoint : function(points)
         {
-            var r = 0, g = 0, b = 0, t = points.length;
-
-            for (var i = 0; i < t; i++)
+            var p;
+            switch(PICBIT.config.pixelAggregationMethod)
             {
-                r += points[i][0];
-                g += points[i][1];
-                b += points[i][2];
+                case 1:
+                    p = this.aggregation.average(points);
+                    break;
+                case 2:
+                    p = this.aggregation.lighter(points);
+                    break;
+                case 3:
+                    p = this.aggregation.darker(points);
+                    break;
             }
 
-            r = Math.ceil(r / t);
-            g = Math.ceil(g / t);
-            b = Math.ceil(b / t);
-
-            return this.getCloserColor([r, g, b, 255]);
+            return this.getCloserColor(p);
         },
 
         getCloserColor : function(p)
         {
             var closerColor, closerColorDistance = Number.MAX_VALUE;
+
+            var palette = PICBIT.config.palette.gameBoy;
 
             for (var i = 0; i < palette.length; i++)
             {
@@ -266,6 +360,3 @@ var PICBIT = {
         }
     }
 };
-
-
-
