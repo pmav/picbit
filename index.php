@@ -37,9 +37,8 @@
         <div class="box" id="drop-zone">
 
             <div id="canvas-container">
-                <!-- <div id="drop-zone"></div> -->
-
-                <img id="initial-image" src="test-images/01.png" style="display: none;" />
+                <img id="original-image" src="test-images/01.png" style="display: none;" />
+                
                 <img id="export-image" />
                 <canvas id="canvas"></canvas>
             </div>
@@ -57,9 +56,17 @@
 
             <div class="form">
                 <span title="xx">Palette</span>&nbsp;
-                <select id="palette-select">
-                    <option value="1">Black &amp; White</option>
-                    <option value="2" selected="selected">Game Boy</option>
+                <select id="select-palette">
+                    <option value="blackAndWhite">Black &amp; White</option>
+                    <option value="gameBoy">Game Boy</option>
+                    <option value="teletext">Teletext</option>
+                    <option value="cga">CGA</option>
+                    <option value="ega" selected="selected">EGA</option>
+                    <option value="msWindows">MS Windows</option>
+                    <option value="appleII">Apple II</option>
+                    
+
+                    <option value="original16">Original (16)</option>
                 </select>
             </div>
 
@@ -74,14 +81,18 @@
 
             <div class="form">
                 <span title="xx">Color Selection</span>&nbsp;
-                <select id="palette-select">
-                    <option value="1" selected="selected">Euclidean distance</option>
+                <select id="select-color-selection">
+                    <option value="1" selected="selected">Euclidean</option>
+                    <option value="2">CIE76</option>
+                    <option value="3">CIE94</option>
                 </select>
             </div>
 
 <button id="draw">Draw</button>
-
 <span id="time"></span>
+
+            <div id="palette"></div>
+
         </div>
 
         <div class="box">

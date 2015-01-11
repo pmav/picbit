@@ -32,3 +32,14 @@ canvas {
   border-bottom: 1px dotted black;
   cursor: help;
 }
+
+#palette {
+  margin: 10px 0;
+}
+
+#palette .color {
+  border: 1px solid black;
+  padding: 3px 10px;
+  margin: 0 2px 0 0;
+  line-height: 26px;
+}
