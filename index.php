@@ -34,7 +34,7 @@
             <p>All the processing being made is pixel oriented and no frameworks are used, except jQuery for basic manipulation of UI elements.</p>
         </div>
 
-        <div class="box" id="drop-zone">
+        <div class="box">
 
             <div id="canvas-container">
                 <img id="original-image" src="test-images/01.png" style="display: none;" />
@@ -65,7 +65,6 @@
                     <option value="msWindows">MS Windows</option>
                     <option value="appleII">Apple II</option>
                     
-
                     <option value="original16">Original (16)</option>
                 </select>
             </div>
@@ -88,11 +87,16 @@
                 </select>
             </div>
 
-<button id="draw">Draw</button>
-<span id="time"></span>
+            <div id="drop-zone">
+                Drop and image here!
+            </div>
+        </div>
 
+        <div class="remove" style="border: 1px dashed red;">
+            <button id="draw">Draw</button>
+            <button id="draw">Random</button>
+            <span id="time"></span>
             <div id="palette"></div>
-
         </div>
 
         <div class="box">
@@ -111,13 +115,5 @@
     </div>
 </div>
 
-<script
-    type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
-<script type="text/javascript">try {
-        var pageTracker = _gat._getTracker("UA-284702-17");
-        pageTracker._trackPageview();
-    } catch (err) {
-    }</script>
 </body>
 </html>

@@ -20,7 +20,7 @@ var PICBIT = {
         /**
          *
          */
-        dropZoneElement : '#export-image',
+        dropZoneElement : '#drop-zone',
         
         /**
          *
@@ -243,7 +243,32 @@ var PICBIT = {
             var img = $(PICBIT.config.originalImageElement).get(0);
             PICBIT.transform.main1(img);
 
-            PICBIT.helpers.showPalette();
+            //PICBIT.helpers.showPalette();
+        }
+    },
+
+
+    process :
+    {
+        main : function() {
+
+        },
+
+        transform : {
+            image : function(){},
+            point : function(){}
+        },
+
+        aggregation : {
+
+        },
+        
+        distance : {
+
+        },
+        
+        helpers : {
+
         }
     },
 
@@ -264,7 +289,7 @@ var PICBIT = {
                 newH = Math.ceil(img.height * (newW / img.width)); // Ajust height.
             }
 
-            // Crop image to be a multiple of step.
+            // Crop image to be a multiple of pixel size.
 
             newW = newW - (newW % PICBIT.config.pixelSize);
             newH = newH - (newH % PICBIT.config.pixelSize);
@@ -277,7 +302,16 @@ var PICBIT = {
             context.canvas.height = newH;
             context.drawImage(img, 0, 0, newW, newH);
 
-            PICBIT.transform.main(img, context);
+            //--
+            var initialImageData = context.getImageData(0, 0, newW, newH); // Loaded image.
+            var finalImageData = context.createImageData(newW, newH); // Empty image.
+
+            this.transform(initialImageData, finalImageData, newW, newH);
+
+            context.putImageData(finalImageData, 0, 0); // Draw final image.
+
+            $('#export-image').attr('src', context.canvas.toDataURL('image/png')); // TODO Move ref.
+            //--
 
             var end = new Date().getTime();
             var time = end - start;
@@ -285,22 +319,9 @@ var PICBIT = {
             $('#time').text(time + 'ms' + ' / '+ Math.floor((newW * newW) / 1000) + ' K pixels');
         },
 
-        main : function(img, ctx)
-        {
-            var w = ctx.canvas.width;
-            var h = ctx.canvas.height;
 
-            var initialImageData = ctx.getImageData(0, 0, w, h); // Loaded image.
-            var finalImageData = ctx.createImageData(w, h); // Empty image.
 
-            this.copy(initialImageData, finalImageData, w, h);
-
-            ctx.putImageData(finalImageData, 0, 0); // Draw final image.
-
-            $('#export-image').attr('src', ctx.canvas.toDataURL('image/png')); // TODO Move ref.
-        },
-
-        copy : function(initialImageData, finalImageData, w, h)
+        transform : function(initialImageData, finalImageData, w, h)
         {
             var step = PICBIT.config.pixelSize;
 
@@ -310,7 +331,7 @@ var PICBIT = {
                 {
                     var points = [];
 
-                    // Get all points.
+                    // Get all points to aggregate.
                     for (var offsetX = 0; offsetX < step; offsetX++)
                     {
                         for (var offsetY = 0; offsetY < step; offsetY++)
@@ -321,8 +342,7 @@ var PICBIT = {
                         }
                     }
                     
-                    // TODO Transform point.
-                    var p = this.transformPoint(points);
+                    var p = this.transformPoint(points); // Aggregate points.
 
                     // Write new point.
                     for (var offsetX = 0; offsetX < step; offsetX++)
@@ -451,8 +471,6 @@ var PICBIT = {
             return [closerColor[0], closerColor[1], closerColor[2], 255];
         },
 
-// http://en.wikipedia.org/wiki/Color_difference
-
         distanceCIE76 : function(p1, p2)
         {
             var l1 = this.rgb2lab(p1);
@@ -465,51 +483,52 @@ var PICBIT = {
             return (l + a + b);
         },
 
-/**
- * http://html5hub.com/exploring-color-matching-in-javascript/
- */
-distanceCIE94 : function(p1, p2)
-{
-    var x = this.rgb2lab(p1);
-    var y = this.rgb2lab(p2);
-    var isTextiles = false;
+        /**
+         * 
+         * http://html5hub.com/exploring-color-matching-in-javascript/
+         */
+        distanceCIE94 : function(p1, p2)
+        {
+            var x = this.rgb2lab(p1);
+            var y = this.rgb2lab(p2);
+            var isTextiles = false;
 
-    var x = {l: x[0], a: x[1], b: x[2]};
-    var y = {l: y[0], a: y[1], b: y[2]};
-    labx = x;
-    laby = y;
-    var k2;
-    var k1;
-    var kl;
-    var kh = 1;
-    var kc = 1;
-    if (isTextiles) {
-        k2 = 0.014;
-        k1 = 0.048;
-        kl = 2;
-    }
-    else {
-        k2 = 0.015;
-        k1 = 0.045;
-        kl = 1;
-    }
- 
-    var c1 = Math.sqrt(x.a * x.a + x.b * x.b);
-    var c2 = Math.sqrt(y.a * y.a + y.b * y.b);
- 
-    var sh = 1 + k2 * c1;
-    var sc = 1 + k1 * c1;
-    var sl = 1;
- 
-    var da = x.a - y.a;
-    var db = x.b - y.b;
-    var dc = c1 - c2;
- 
-    var dl = x.l - y.l;
-    var dh = Math.sqrt(da * da + db * db - dc * dc);
- 
-    return Math.sqrt(Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)),2) + Math.pow((dh/(kh * sh)),2));
-},
+            var x = {l: x[0], a: x[1], b: x[2]};
+            var y = {l: y[0], a: y[1], b: y[2]};
+            labx = x;
+            laby = y;
+            var k2;
+            var k1;
+            var kl;
+            var kh = 1;
+            var kc = 1;
+            if (isTextiles) {
+                k2 = 0.014;
+                k1 = 0.048;
+                kl = 2;
+            }
+            else {
+                k2 = 0.015;
+                k1 = 0.045;
+                kl = 1;
+            }
+         
+            var c1 = Math.sqrt(x.a * x.a + x.b * x.b);
+            var c2 = Math.sqrt(y.a * y.a + y.b * y.b);
+         
+            var sh = 1 + k2 * c1;
+            var sc = 1 + k1 * c1;
+            var sl = 1;
+         
+            var da = x.a - y.a;
+            var db = x.b - y.b;
+            var dc = c1 - c2;
+         
+            var dl = x.l - y.l;
+            var dh = Math.sqrt(da * da + db * db - dc * dc);
+         
+            return Math.sqrt(Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)),2) + Math.pow((dh/(kh * sh)),2));
+        },
 
         euclideanDistance : function(p1, p2)
         {
@@ -543,9 +562,11 @@ distanceCIE94 : function(p1, p2)
             imageData.data[index + 3] = p[3];
         },
 
-/**
- * http://stackoverflow.com/a/8433985
- */
+        /**
+         * Convert a point from RGB to LAB color space.
+         *
+         * http://stackoverflow.com/a/8433985
+         */
         rgb2lab : function(p)
         {
             var R = p[0];
