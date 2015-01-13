@@ -37,7 +37,7 @@
         <div class="box">
 
             <div id="canvas-container">
-                <img id="original-image" src="test-images/01.png" style="display: none;" />
+                <img id="original-image" src="test-images/01.png" />
                 
                 <img id="export-image" />
                 <canvas id="canvas"></canvas>
