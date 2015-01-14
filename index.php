@@ -43,60 +43,63 @@
                 <canvas id="canvas"></canvas>
             </div>
 
-            <div class="form">
-                <span title="xx">Pixel Size</span>&nbsp;
-                <select id="select-pixel-size">
-                    <option value="1">1px</option>
-                    <option value="2">2px</option>
-                    <option value="4" selected="selected">4px</option>
-                    <option value="8">8px</option>
-                    <option value="12">12px</option>
-                </select>
-            </div>
+            <div class="center">
+                <div class="form">
+                    <span title="xx">Pixel Size</span>&nbsp;
+                    <select id="select-pixel-size">
+                        <option value="1">1px</option>
+                        <option value="2">2px</option>
+                        <option value="4" selected="selected">4px</option>
+                        <option value="8">8px</option>
+                        <option value="12">12px</option>
+                    </select>
+                </div>
 
-            <div class="form">
-                <span title="xx">Palette</span>&nbsp;
-                <select id="select-palette">
-                    <option value="blackAndWhite">Black &amp; White</option>
-                    <option value="gameBoy">Game Boy</option>
-                    <option value="teletext">Teletext</option>
-                    <option value="cga">CGA</option>
-                    <option value="ega" selected="selected">EGA</option>
-                    <option value="msWindows">MS Windows</option>
-                    <option value="appleII">Apple II</option>
-                    
-                    <option value="original16">Original (16)</option>
-                </select>
-            </div>
+                <div class="form">
+                    <span title="xx">Palette</span>&nbsp;
+                    <select id="select-palette">
+                        <optgroup label="2 Colors">
+                        <option value="blackAndWhite">Black &amp; White</option>
 
-            <div class="form">
-                <span title="xx">Pixel Aggregation</span>&nbsp;
-                <select id="select-pixel-aggregation-method">
-                    <option value="1" selected="selected">Average</option>
-                    <option value="2">Lighter</option>
-                    <option value="3">Darker</option>
-                </select>
-            </div>
+                        <optgroup label="4 Colors">
+                        <option value="cga">CGA</option>
+                        <option value="gameBoy">Game Boy</option>
 
-            <div class="form">
-                <span title="xx">Color Selection</span>&nbsp;
-                <select id="select-color-selection">
-                    <option value="1" selected="selected">Euclidean</option>
-                    <option value="2">CIE76</option>
-                    <option value="3">CIE94</option>
-                </select>
+                        <optgroup label="8 Colors">
+                        <option value="teletext">Teletext</option>
+
+                        <optgroup label="16 Colors">
+                        <option value="appleII" selected="selected">Apple II</option>
+                        <option value="ega">EGA</option>
+                        <option value="msWindows">MS Windows</option>
+                        
+                        <optgroup label="Original">
+                        <option value="original16">16 Colors</option>
+                    </select>
+                </div>
+
+                <div class="form">
+                    <span title="xx">Pixel Aggregation</span>&nbsp;
+                    <select id="select-pixel-aggregation-method">
+                        <option value="1" selected="selected">Average</option>
+                        <option value="2">Lighter</option>
+                        <option value="3">Darker</option>
+                    </select>
+                </div>
+
+                <div class="form">
+                    <span title="xx">Color Selection</span>&nbsp;
+                    <select id="select-color-selection">
+                        <option value="1" selected="selected">Euclidean</option>
+                        <option value="2">CIE76</option>
+                        <option value="3">CIE94</option>
+                    </select>
+                </div>
             </div>
 
             <div id="drop-zone">
                 Drop and image here!
             </div>
-        </div>
-
-        <div class="remove" style="border: 1px dashed red;">
-            <button id="draw">Draw</button>
-            <button id="draw">Random</button>
-            <span id="time"></span>
-            <div id="palette"></div>
         </div>
 
         <div class="box">

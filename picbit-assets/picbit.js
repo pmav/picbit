@@ -3,6 +3,16 @@
 // http://stackoverflow.com/questions/13586999/color-difference-similarity-between-two-values-with-js
 // http://en.wikipedia.org/wiki/Color_difference
 
+/*
+TODO:
+- Random Button,
+- ReDraw Button,
+- Time+stats, Form descriptions,
+- Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
+- Testar CIE functions
+- Color simplification, get top 16 from image.
+*/
+
 $(document).ready(function() {
     PICBIT.main();
 });
@@ -64,12 +74,12 @@ var PICBIT = {
             /**
              * Current pixel aggregation method.
              */
-            pixelAggregationMethod : 1,
+            pixelAggregationMethod : null,
 
             /**
              * Current color selection method.
              */
-            colorSelectionMethod : 1,
+            colorSelectionMethod : null,
         },
 
         /**
@@ -77,94 +87,15 @@ var PICBIT = {
          */
         palette : {
 
-            original : null,
+            original16 : 'original16',
 
-            blackAndWhite : [
-                [0,     0,   0],
-                [255, 255, 255]
-            ],
-
-            gameBoy : [
-                [17,   56, 17],
-                [50,   98, 50],
-                [139, 171, 36],
-                [155, 187, 39]
-            ],
-
-            teletext : [
-                [0,     0,   0],
-                [0,    39, 251],
-                [255,  48,  22],
-                [255,  63, 252],
-                [0,   249,  44],
-                [0,   252, 254],
-                [255, 253,  51],
-                [255, 255, 255]
-            ],
-
-            cga : [
-                [0,     0,   0],
-                [85,  255, 255],
-                [255,  85, 255],
-                [255, 255, 255]
-            ],
-
-            ega : [
-                [0,    0,    0],
-                [0,    0,  170],
-                [0,   170,   0],
-                [0,   170, 170],
-                [170,   0,   0],
-                [170,   0, 170],
-                [170,  85,   0],
-                [170, 170, 170],
-                [85,   85,  85],
-                [85,   85, 255],
-                [85,  255,  85],
-                [85,  255, 255],
-                [255,  85,  85],
-                [255,  85, 255],
-                [255, 255,  85],
-                [255, 255, 255]
-            ],
-
-            appleII : [
-                [0, 0, 0],
-                [133, 59, 81],
-                [80, 71, 137],
-                [234, 93, 240],
-                [0, 104, 82],
-                [146, 146, 146],
-                [0, 168, 241],
-                [202, 195, 248],
-                [81, 92, 15],
-                [235, 127, 35],
-                [146, 146, 146],
-                [246, 185, 202],
-                [0, 202, 41],
-                [203, 211, 155],
-                [154, 220, 203],
-                [255, 255, 255],
-            ],
-
-            msWindows : [
-                [0, 0, 0],
-                [128, 0, 0],
-                [0, 128, 0],
-                [128, 128, 0],
-                [0, 0, 128],
-                [128, 0, 128],
-                [0, 128, 128],
-                [192, 192, 192],
-                [128, 128, 128],
-                [255, 0, 0],
-                [1, 255, 0],
-                [255, 255, 0],
-                [0, 0, 255],
-                [255, 0, 255],
-                [1, 255, 255],
-                [255, 255, 255],
-            ]
+            blackAndWhite : [ [0,     0,   0], [255, 255, 255] ],
+            gameBoy : [ [17,   56, 17], [50,   98, 50], [139, 171, 36], [155, 187, 39] ],
+            teletext : [ [0,     0,   0], [0,    39, 251], [255,  48,  22], [255,  63, 252], [0,   249,  44], [0,   252, 254], [255, 253,  51], [255, 255, 255] ],
+            cga : [ [0,     0,   0], [85,  255, 255], [255,  85, 255], [255, 255, 255] ],
+            ega : [ [0,    0,    0], [0,    0,  170], [0,   170,   0], [0,   170, 170], [170,   0,   0], [170,   0, 170], [170,  85,   0], [170, 170, 170], [85,   85,  85], [85,   85, 255], [85,  255,  85], [85,  255, 255], [255,  85,  85], [255,  85, 255], [255, 255,  85], [255, 255, 255] ],
+            appleII : [ [0,     0,   0], [133,  59,  81], [80,   71, 137], [234,  93, 240], [0,   104,  82], [146, 146, 146], [0,   168, 241], [202, 195, 248], [81,   92,  15], [235, 127,  35], [146, 146, 146], [246, 185, 202], [0,   202,  41], [203, 211, 155], [154, 220, 203], [255, 255, 255] ],
+            msWindows : [ [0,     0,   0], [128,   0,   0], [0,   128,   0], [128, 128,   0], [0,     0, 128], [128,   0, 128], [0,   128, 128], [192, 192, 192], [128, 128, 128], [255,   0,   0], [1,   255,   0], [255, 255,   0], [0,     0, 255], [255,   0, 255], [1,   255, 255], [255, 255, 255] ]
         }
     },
 
@@ -178,8 +109,6 @@ var PICBIT = {
         dropZone.on('dragexit', PICBIT.handlers.dragExit);
         dropZone.on('dragover', PICBIT.handlers.dragOver);
         dropZone.on('drop', PICBIT.handlers.dragDrop);
-
-        $('#draw').click(PICBIT.handlers.draw); // TODO Remove.
 
         // Register form events.
         $('#select-pixel-aggregation-method').change(PICBIT.handlers.draw);
@@ -252,6 +181,8 @@ var PICBIT = {
 
             // Palette.
             PICBIT.config.state.selectedPalette = PICBIT.config.palette[$('#select-palette').val()];
+            if (PICBIT.config.state.selectedPalette === 'original16')
+                PICBIT.config.selectedPalette = [ [0,0,0], [255,100,100] ];
 
             // Color selection method.
             switch(parseInt($('#select-color-selection').val(), 10))
@@ -280,21 +211,15 @@ var PICBIT = {
                     break;
             }
 
-            // TODO Color simplification, get top 16 from image.
-            if ($('#select-palette').val() === 'original16')
-                PICBIT.config.selectedPalette = [ [0,0,0], [255,100,100] ];
-
             // Process image.
             var img = $(PICBIT.config.originalImageElement).get(0);
             PICBIT.process.main(img);
         }
     },
 
-    process :
-    {
-        main : function(img) {
-            var start = new Date().getTime();
+    process : {
 
+        main : function(img) {
             var newW = img.width;
             var newH = img.height;
             
@@ -327,11 +252,6 @@ var PICBIT = {
             context.putImageData(finalImageData, 0, 0); // Draw final image into canvas.
 
             $(PICBIT.config.exportImageElement).attr('src', context.canvas.toDataURL('image/png')); // Copy image from canvas to final element.
-
-
-            var end = new Date().getTime();
-            var time = end - start;
-            $('#time').text(time + 'ms' + ' / '+ Math.floor((newW * newW) / 1000) + ' K pixels');
         },
 
         transform : {
@@ -379,10 +299,13 @@ var PICBIT = {
              * Aggregate a group of points into a single one using a custom aggregation method and a custom color selection method.
              */
             point : function(points) {
+
                 var palette = PICBIT.config.state.selectedPalette;
 
                 // Aggregate points.
                 var p = PICBIT.config.state.pixelAggregationMethod(points);
+
+                // TODO Point cache.
 
                 // Select point color.
                 var closerColor, closerColorDistance = Number.MAX_VALUE;
@@ -403,6 +326,7 @@ var PICBIT = {
         },
 
         aggregation : {
+
             average : function(points) {
                 var r = 0,
                     g = 0,
@@ -462,8 +386,10 @@ var PICBIT = {
         
         distance : {
             
-            euclideanDistance : function(p1, p2)
-            {
+            /**
+             *
+             */
+            euclideanDistance : function(p1, p2) {
                 var r = Math.pow(p2[0] - p1[0], 2);
                 var g = Math.pow(p2[1] - p1[1], 2);
                 var b = Math.pow(p2[2] - p1[2], 2);
@@ -471,14 +397,18 @@ var PICBIT = {
                 return r + g + b;
             },
 
-            distanceCIE76 : function(p1, p2)
-            {
+            /**
+             *
+             */
+            distanceCIE76 : function(p1, p2) {
                 var l1 = PICBIT.process.helpers.rgb2lab(p1);
                 var l2 = PICBIT.process.helpers.rgb2lab(p2);
 
                 var l = Math.pow(l2[0] - l1[0], 2);
                 var a = Math.pow(l2[1] - l1[1], 2);
                 var b = Math.pow(l2[2] - l1[2], 2);
+
+                //console.log(p1 + ' ('+ l1 +')' + p2 + ' ('+l2+') = ' + (l+a+b));
 
                 return l + a + b;
             },
@@ -487,8 +417,7 @@ var PICBIT = {
              * 
              * http://html5hub.com/exploring-color-matching-in-javascript/
              */
-            distanceCIE94 : function(p1, p2)
-            {
+            distanceCIE94 : function(p1, p2) {
                 var x = PICBIT.process.helpers.rgb2lab(p1);
                 var y = PICBIT.process.helpers.rgb2lab(p2);
                 var isTextiles = false;
@@ -523,7 +452,7 @@ var PICBIT = {
                 var dl = x.l - y.l;
                 var dh = Math.sqrt(da * da + db * db - dc * dc);
              
-                return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)),2) + Math.pow((dh/(kh * sh)),2);
+                return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
             }
         },
         
@@ -532,8 +461,8 @@ var PICBIT = {
             /**
              * Convert a (x, y) coord. to image index values.
              */
-            getIndexFromCoords : function(x, y, h, offsetX, offsetY) {
-                return ((x + offsetX) + ((y + offsetY)) * h) * 4;
+            getIndexFromCoords : function(x, y, w, offsetX, offsetY) {
+                return ((x + offsetX) + ((y + offsetY)) * w) * 4;
             },
 
             /**
@@ -621,6 +550,6 @@ var PICBIT = {
                 return [l_s, a_s, b_s];
             }
         }
-    },
+    }
 
 };

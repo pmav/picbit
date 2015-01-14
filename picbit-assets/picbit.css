@@ -1,16 +1,15 @@
 #drop-zone {  
-  background: #EEE;
   text-align: center;
-  line-height: 40px;
+  line-height: 50px;
   font-size: 20px;
   font-weight: bold;
-  margin: 6px 0 0 0;
-  color: #AAA;
-  border: 4px dashed #AAA;
+  margin: 10px 23px 0px;
+  color: #999;
+  border: 1px solid #AAA;
 }
 
 #drop-zone.drop-zone-hover {
-    border: 4px dashed #000;
+    border: 1px solid #000;
     color: #000;
 }
 
@@ -35,12 +34,16 @@ canvas {
     vertical-align: middle;
 }
 
+.center {
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
 .form {
   padding: 4px;
   display: inline-block;
-  background: #CCC;
+  border: 1px solid #AAA;
   font-weight: bold;
-  margin: 6px 0 0 0;
 }
 
 .form span {
