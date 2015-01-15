@@ -1,17 +1,4 @@
-// http://colormine.org/
-// http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
-// http://stackoverflow.com/questions/13586999/color-difference-similarity-between-two-values-with-js
-// http://en.wikipedia.org/wiki/Color_difference
 
-/*
-TODO:
-- Random Button,
-- ReDraw Button,
-- Time+stats, Form descriptions,
-- Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
-- Testar CIE functions
-- Color simplification, get top 16 from image.
-*/
 
 $(document).ready(function() {
     PICBIT.main();
@@ -209,6 +196,12 @@ var PICBIT = {
                 case 3:
                     PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.darker;
                     break;
+                case 4:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.firstPixel;
+                    break;
+                case 5:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.lastPixel;
+                    break;
             }
 
             // Process image.
@@ -381,6 +374,14 @@ var PICBIT = {
                 }
 
                 return [c[0], c[1], c[2], PICBIT.config.alphaValue];
+            },
+
+            firstPixel : function(points) {
+                return points[0];
+            },
+
+            lastPixel : function(points) {
+                return points[points.length - 1];
             }
         },
         

@@ -189,8 +189,8 @@ function CIEDE2000(c1,c2)
     var dHp = 2*sqrt(C1p*C2p)*sin(radians(dhp)/2.0); //(11)
 
     /**
-    * Step 3: Calculate CIEDE2000 Color-Difference
-    */
+     * Step 3: Calculate CIEDE2000 Color-Difference
+     */
     var a_L = (L1 + L2) / 2.0; //(12)
     var a_Cp = (C1p + C2p) / 2.0; //(13)
 

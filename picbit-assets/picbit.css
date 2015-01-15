@@ -1,9 +1,12 @@
+img {
+    padding: 0;
+}
 #drop-zone {  
   text-align: center;
   line-height: 50px;
   font-size: 20px;
   font-weight: bold;
-  margin: 10px 23px 0px;
+  margin: 10px 19px 0px;
   color: #999;
   border: 1px solid #AAA;
 }

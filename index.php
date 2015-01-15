@@ -45,13 +45,24 @@
 
             <div class="center">
                 <div class="form">
-                    <span title="xx">Pixel Size</span>&nbsp;
+                    <span title="Size of pixels after processing, 4x4px means that a square with 16 pixels in the original image are transformed into one.">Pixel Size</span>&nbsp;
                     <select id="select-pixel-size">
-                        <option value="1">1px</option>
-                        <option value="2">2px</option>
-                        <option value="4" selected="selected">4px</option>
-                        <option value="8">8px</option>
-                        <option value="12">12px</option>
+                        <option value="1">1x1px</option>
+                        <option value="2">2x2px</option>
+                        <option value="4" selected="selected">4x4px</option>
+                        <option value="8">8x8px</option>
+                        <option value="12">12x12px</option>
+                    </select>
+                </div>
+
+                <div class="form">
+                    <span title="Function to select a color from the pixels to aggregate. E.G.: Average will get the average color from each 16 pixels in the original image.">Pixel Aggregation</span>&nbsp;
+                    <select id="select-pixel-aggregation-method">
+                        <option value="1" selected="selected">Average</option>
+                        <option value="2">Lighter</option>
+                        <option value="3">Darker</option>
+                        <option value="4">First Pixel</option>
+                        <option value="5">Last Pixel</option>
                     </select>
                 </div>
 
@@ -75,15 +86,6 @@
                         
                         <optgroup label="Original">
                         <option value="original16">16 Colors</option>
-                    </select>
-                </div>
-
-                <div class="form">
-                    <span title="xx">Pixel Aggregation</span>&nbsp;
-                    <select id="select-pixel-aggregation-method">
-                        <option value="1" selected="selected">Average</option>
-                        <option value="2">Lighter</option>
-                        <option value="3">Darker</option>
                     </select>
                 </div>
 
@@ -113,10 +115,11 @@
         </div>
 
     </div>
-    <div id="footer"><?php echo $config->getProjectName(); ?> | <a href="http://pmav.eu">pmav.eu</a>
-        | <?php echo $config->getProjectDate(); ?> | HTML 5 | This work is licensed under a <a rel="license" href="assets/LICENSE">MIT License</a>.
+    <div id="footer"><?php echo $config->getProjectName(); ?> | <?php echo $config->getProjectVersion(); ?>  | <a href="http://pmav.eu">pmav.eu</a> | <?php echo $config->getProjectDate(); ?> | HTML 5 | This work is licensed under a <a rel="license" href="assets/LICENSE">MIT License</a>.
     </div>
 </div>
+
+<a href="https://github.com/pmav/picbit"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 
 </body>
 </html>

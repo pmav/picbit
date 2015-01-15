@@ -5,6 +5,7 @@ class Config {
   private $configFilePath;
 
   private $projectName;
+  private $projectVersion;
   private $projectDate;
   private $projectDescription;
   private $projectTags;
@@ -28,11 +29,13 @@ class Config {
 
       if ($child->getName() === 'name') {
         $this->projectName = $child;
+      } else if ($child->getName() === 'version') {
+          $this->projectVersion = $child;
       } else if ($child->getName() === 'date') {
           $this->projectDate = $child;
-        } else if ($child->getName() === 'description') {
+      } else if ($child->getName() === 'description') {
             $this->projectDescription = $child;
-          } else if ($child->getName() === 'tags') {
+      } else if ($child->getName() === 'tags') {
               $this->projectTags = array();
               foreach ($child as $tag) {
                 $this->projectTags[] = $tag;
@@ -43,6 +46,10 @@ class Config {
 
   public function getProjectName() {
     return $this->projectName;
+  }
+
+  public function getProjectVersion() {
+    return $this->projectVersion;
   }
 
   public function getProjectDate() {
