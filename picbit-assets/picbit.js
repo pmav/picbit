@@ -32,6 +32,17 @@ var PICBIT = {
          *
          */
         dropZoneHoverClass : 'drop-zone-hover',
+
+
+        pixelSizeSelect : '#select-pixel-size',
+        paletteSelect : '#select-palette',
+        colorSelectionSelect : '#select-color-selection',
+        pixelAggregationMethodSelect : '#select-pixel-aggregation-method',
+
+        randomButtonElement : '#button-random',
+        redrawButtonElement : '#button-redraw',
+
+        processingTimeElement : '#processing-time',
         
         /**
          * Max image width.
@@ -103,6 +114,10 @@ var PICBIT = {
         $('#select-palette').change(PICBIT.handlers.draw);
         $('#select-color-selection').change(PICBIT.handlers.draw);
 
+        // Register button events.
+        $(PICBIT.config.randomButtonElement).click(PICBIT.handlers.random);
+        $(PICBIT.config.redrawButtonElement).click(PICBIT.handlers.draw);
+
         // Load initial image.
         var img = $(PICBIT.config.originalImageElement).get(0);
         img.onload = function() {
@@ -160,19 +175,41 @@ var PICBIT = {
             }
         },
 
+        random : function() {
+            
+            // Randomize controls.
+            var getRandomInt = function  (min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+
+            var setRandomOption = function(select) {
+                options = $(select + ' option');
+                var r = getRandomInt(0, options.length - 1);
+                $(select).val(options.eq(r).val());
+            };
+
+            setRandomOption(PICBIT.config.pixelSizeSelect);
+            setRandomOption(PICBIT.config.paletteSelect);
+            setRandomOption(PICBIT.config.colorSelectionSelect);
+            setRandomOption(PICBIT.config.pixelAggregationMethodSelect);
+
+            // Draw.
+            PICBIT.handlers.draw();
+        },
+
         draw : function() {
             // Load current state from form.
 
             // Pixel size.
-            PICBIT.config.state.pixelSize = parseInt($('#select-pixel-size').val(), 10);
+            PICBIT.config.state.pixelSize = parseInt($(PICBIT.config.pixelSizeSelect).val(), 10);
 
             // Palette.
-            PICBIT.config.state.selectedPalette = PICBIT.config.palette[$('#select-palette').val()];
+            PICBIT.config.state.selectedPalette = PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()];
             if (PICBIT.config.state.selectedPalette === 'original16')
                 PICBIT.config.selectedPalette = [ [0,0,0], [255,100,100] ];
 
             // Color selection method.
-            switch(parseInt($('#select-color-selection').val(), 10))
+            switch(parseInt($(PICBIT.config.colorSelectionSelect).val(), 10))
             {
                 case 1:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.euclideanDistance;
@@ -186,7 +223,7 @@ var PICBIT = {
             }
 
             // Pixel aggregation method.
-            switch(parseInt($('#select-pixel-aggregation-method').val(), 10)) {
+            switch(parseInt($(PICBIT.config.pixelAggregationMethodSelect).val(), 10)) {
                 case 1:
                     PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.average;
                     break;
@@ -206,7 +243,12 @@ var PICBIT = {
 
             // Process image.
             var img = $(PICBIT.config.originalImageElement).get(0);
+
+            var time = new Date().getTime();
             PICBIT.process.main(img);
+            time = (new Date().getTime()) - time;
+
+            $(PICBIT.config.processingTimeElement).html(time);
         }
     },
 
@@ -342,7 +384,7 @@ var PICBIT = {
             
             darker : function(points) {
                 var c,
-                    cs = Number.MAX_VALUE,
+                    cs = 256,
                     t = points.length;
 
                 for (var i = 0; i < t; i++)
@@ -360,12 +402,13 @@ var PICBIT = {
             
             lighter : function(points) {
                 var c,
-                    cs = Number.MIN_VALUE,
+                    cs = -1,
                     t = points.length;
 
                 for (var i = 0; i < t; i++)
                 {
                     var t1 = (points[i][0] + points[i][1] + points[i][2]) / 3;
+
                     if (t1 > cs)
                     {
                         c = points[i];
@@ -408,8 +451,6 @@ var PICBIT = {
                 var l = Math.pow(l2[0] - l1[0], 2);
                 var a = Math.pow(l2[1] - l1[1], 2);
                 var b = Math.pow(l2[2] - l1[2], 2);
-
-                //console.log(p1 + ' ('+ l1 +')' + p2 + ' ('+l2+') = ' + (l+a+b));
 
                 return l + a + b;
             },

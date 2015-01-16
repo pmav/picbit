@@ -41,11 +41,16 @@
                 
                 <img id="export-image" />
                 <canvas id="canvas"></canvas>
-            </div>
+            </div>                
+        </div>
+
+        <div class="box">
 
             <div id="controls">
                 <div class="form">
-                    <span title="Size of pixels after processing, 4x4px means that a square with 16 pixels in the original image are transformed into one.">Pixel Size</span>&nbsp;
+                    <span class="title-container">
+                        <span class="title" title="Size of pixels after processing, 4x4px means that a square with 16 pixels in the original image are transformed into one.">Pixel Size</span>
+                    </span>
                     <select id="select-pixel-size">
                         <option value="1">1x1px</option>
                         <option value="2">2x2px</option>
@@ -54,9 +59,13 @@
                         <option value="12">12x12px</option>
                     </select>
                 </div>
-<br>
+                
+                <br>
+
                 <div class="form">
-                    <span title="Function to select a color from the pixels to aggregate. E.G.: Average will get the average color from each 16 pixels in the original image.">Pixel Aggregation</span>&nbsp;
+                    <span class="title-container">
+                        <span class="title" title="Function to select a color from the pixels to aggregate. E.G.: Average will get the average color from each 16 pixels in the original image (in the case of pixel size 4x4).">Aggregation</span>
+                    </span>
                     <select id="select-pixel-aggregation-method">
                         <option value="1" selected="selected">Average</option>
                         <option value="2">Lighter</option>
@@ -65,9 +74,13 @@
                         <option value="5">Last Pixel</option>
                     </select>
                 </div>
-<br>
+
+                <br>
+                
                 <div class="form">
-                    <span title="xx">Palette</span>&nbsp;
+                    <span class="title-container">
+                        <span class="title" title="Colors to be used in the final image.">Palette</span>
+                    </span>
                     <select id="select-palette">
                         <optgroup label="2 Colors">
                         <option value="blackAndWhite">Black &amp; White</option>
@@ -88,9 +101,13 @@
                         <option value="original16">16 Colors</option>
                     </select>
                 </div>
-<br>
+
+                <br>
+                
                 <div class="form">
-                    <span title="xx">Color Selection</span>&nbsp;
+                    <span class="title-container">
+                        <span class="title" title="Function used to select which color from the palette should be used to repalce the original color after agreggation.">Color Selection</span>
+                    </span>
                     <select id="select-color-selection">
                         <option value="1" selected="selected">Euclidean</option>
                         <option value="2">CIE76</option>
@@ -100,11 +117,18 @@
             </div>
 
             <div id="drop-zone">
-                Drop and image here!
+                Drop an image here!
             </div>
 
             <div class="cl"></div>
         </div>
+
+<p>
+    <input type="button" id="button-random" value="Random" />
+    <input type="button" id="button-redraw" value="Redraw" />
+        
+    <span id="processing-time"></span>ms
+</p>
 
         <div class="box">
             <h2>Source Code</h2>

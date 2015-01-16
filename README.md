@@ -3,9 +3,9 @@ JavaScript image processing tests and basic example.
 
 ### TODO
 
-- Random Button
-- ReDraw Button
-- Time and stats
+- ~~Random Button~~
+- ~~Redraw Button~~
+- ~~Time stats~~
 - Form descriptions
 
 - Palette: top 2/4/8/16/32 from image

@@ -4,36 +4,39 @@ img {
 
 hr {
   border: 0;
-  border-top: 1px solid #AAA;
+  border-top: 1px dotted #AAA;
+  margin: 12px 0;
 }
 
 #drop-zone {  
   text-align: center;
-  padding: 52px 0 51px 0;
+  padding: 43px 0 40px 0;
   font-size: 20px;
   font-weight: bold;
   width: 500px;
   color: #999;
-  border: 1px solid #AAA;
+  
+  background: #CCC;
   float: left;
 
-  margin: 6px 0 0 6px;
+  margin: 0 0 0 6px;
+
 }
 
 #drop-zone.drop-zone-hover {
-    border: 1px solid #000;
+    background: #EEE;
     color: #000;
 }
 
 #controls {
-    margin: 6px 0 0 0; 
-    border: 1px solid #AAA;
+    margin: 0 0 0 0; 
+    
     width: 280px;
     float: left;
 }
 
 #controls .form {
-  padding: 4px;
+  padding: 2px;
   display: inline-block;
   
   font-weight: bold;
@@ -43,11 +46,22 @@ hr {
   width: 130px;
 }
 
-#controls .form span {
-
-  cursor: help;
-  width: 130px;
+#controls .form .title-container {
+  width: 136px;
   display: inline-block;
+}
+
+#controls .form .title {
+  cursor: help;
+  display: inline-block;
+  border-bottom: 1px dotted #000;
+}
+
+#controls .form .small {
+  border: 1px solid red;
+  font-weight: normal;
+  font-size: 12px;
+  
 }
 
 .cl {
