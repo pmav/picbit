@@ -43,7 +43,7 @@
                 <canvas id="canvas"></canvas>
             </div>
 
-            <div class="center">
+            <div id="controls">
                 <div class="form">
                     <span title="Size of pixels after processing, 4x4px means that a square with 16 pixels in the original image are transformed into one.">Pixel Size</span>&nbsp;
                     <select id="select-pixel-size">
@@ -54,7 +54,7 @@
                         <option value="12">12x12px</option>
                     </select>
                 </div>
-
+<br>
                 <div class="form">
                     <span title="Function to select a color from the pixels to aggregate. E.G.: Average will get the average color from each 16 pixels in the original image.">Pixel Aggregation</span>&nbsp;
                     <select id="select-pixel-aggregation-method">
@@ -65,7 +65,7 @@
                         <option value="5">Last Pixel</option>
                     </select>
                 </div>
-
+<br>
                 <div class="form">
                     <span title="xx">Palette</span>&nbsp;
                     <select id="select-palette">
@@ -88,7 +88,7 @@
                         <option value="original16">16 Colors</option>
                     </select>
                 </div>
-
+<br>
                 <div class="form">
                     <span title="xx">Color Selection</span>&nbsp;
                     <select id="select-color-selection">
@@ -102,6 +102,8 @@
             <div id="drop-zone">
                 Drop and image here!
             </div>
+
+            <div class="cl"></div>
         </div>
 
         <div class="box">

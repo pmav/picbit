@@ -1,20 +1,61 @@
 img {
     padding: 0;
 }
+
+hr {
+  border: 0;
+  border-top: 1px solid #AAA;
+}
+
 #drop-zone {  
   text-align: center;
-  line-height: 50px;
+  padding: 52px 0 51px 0;
   font-size: 20px;
   font-weight: bold;
-  margin: 10px 19px 0px;
+  width: 500px;
   color: #999;
   border: 1px solid #AAA;
+  float: left;
+
+  margin: 6px 0 0 6px;
 }
 
 #drop-zone.drop-zone-hover {
     border: 1px solid #000;
     color: #000;
 }
+
+#controls {
+    margin: 6px 0 0 0; 
+    border: 1px solid #AAA;
+    width: 280px;
+    float: left;
+}
+
+#controls .form {
+  padding: 4px;
+  display: inline-block;
+  
+  font-weight: bold;
+}
+
+#controls .form select {
+  width: 130px;
+}
+
+#controls .form span {
+
+  cursor: help;
+  width: 130px;
+  display: inline-block;
+}
+
+.cl {
+  line-height: 0;
+  clear: both;
+}
+
+/* *** */
 
 #original-image {
   display: none;
@@ -37,22 +78,7 @@ canvas {
     vertical-align: middle;
 }
 
-.center {
-    margin: 10px 0 0 0;
-    text-align: center;
-}
-
-.form {
-  padding: 4px;
-  display: inline-block;
-  border: 1px solid #AAA;
-  font-weight: bold;
-}
-
-.form span {
-  border-bottom: 1px dotted black;
-  cursor: help;
-}
+/* *** */
 
 #palette {
   margin: 10px 0;
