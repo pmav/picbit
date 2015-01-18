@@ -19,13 +19,13 @@ JavaScript image processing tests and basic example.
 
 ### Links
 
-http://colormine.org
-http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
-http://stackoverflow.com/questions/13586999/color-difference-similarity-between-two-values-with-js
-http://en.wikipedia.org/wiki/Color_difference
-http://stackoverflow.com/a/8433985
-https://github.com/markusn/color-diff
-https://github.com/altercation/solarized
-https://github.com/THEjoezack/ColorMine
-http://lokeshdhakar.com/projects/color-thief/
-http://en.wikipedia.org/wiki/Color_quantization
+- http://colormine.org
+- http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
+- http://stackoverflow.com/questions/13586999/color-difference-similarity-between-two-values-with-js
+- http://en.wikipedia.org/wiki/Color_difference
+- http://stackoverflow.com/a/8433985
+- https://github.com/markusn/color-diff
+- https://github.com/altercation/solarized
+- https://github.com/THEjoezack/ColorMine
+- http://lokeshdhakar.com/projects/color-thief/
+- http://en.wikipedia.org/wiki/Color_quantization
