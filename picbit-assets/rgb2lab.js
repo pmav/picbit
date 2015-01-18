@@ -221,6 +221,92 @@ function degrees(n) { return n*(180/Math.PI); }
 function radians(n) { return n*(Math.PI/180); }
 
 
+function CMClc(x, y)
+{
+    //var aLab = colorA.To<Lab>();
+    //var bLab = colorB.To<Lab>();
+var _lightness = 2.0;
+var _chroma = 1.0;
+
+    var aLab = {L: x[0], A: x[1], B: x[2]};
+    var bLab = {L: y[0], A: y[1], B: y[2]};
+
+    var deltaL = aLab.L - bLab.L;
+    var h = Math.atan2(aLab.B, aLab.A);
+    var c1 = Math.sqrt(aLab.A * aLab.A + aLab.B * aLab.B);
+    var c2 = Math.sqrt(bLab.A * bLab.A + bLab.B * bLab.B);
+    var deltaC = c1 - c2;
+    var deltaH = Math.sqrt(
+    (aLab.A - bLab.A) * (aLab.A - bLab.A) +
+    (aLab.B - bLab.B) * (aLab.B - bLab.B) -
+    deltaC * deltaC);
+    var c1_4 = c1 * c1;
+    c1_4 *= c1_4;
+    var t = 164 <= h || h >= 345
+    ? .56 + Math.abs(.2 * Math.cos(h + 168.0))
+    : .36 + Math.abs(.4 * Math.cos(h + 35.0));
+    var f = Math.sqrt(c1_4 / (c1_4 + 1900.0));
+    var sL = aLab.L < 16 ? .511 : (.040975 * aLab.L) / (1.0 + .01765 * aLab.L);
+    var sC = (.0638 * c1) / (1 + .0131 * c1) + .638;
+    var sH = sC * (f * t + 1 - f);
+    var differences = DistanceDivided(deltaL, _lightness * sL) +
+    DistanceDivided(deltaC, _chroma * sC) +
+    DistanceDivided(deltaH, sH);
+    return Math.sqrt(differences);
+}
+
+function DistanceDivided(a, dividend) {
+    var adiv = a / dividend;
+    return adiv * adiv;
+}
+
+function getColorsByFrequency(initialImageData, limit) {
+
+    var time = new Date().getTime();
+
+    var length = initialImageData.data.length;
+    var cache = {};
+
+    for (var i = 0; i < length; i += 4)
+    {
+        var r = initialImageData.data[i];
+        var g = initialImageData.data[i + 1];
+        var b = initialImageData.data[i + 2];
+
+        var k = r + '_' + g + '_' + b;
+        if (cache[k] === undefined)
+            cache[k] = 0;
+        cache[k]++;
+    }
+
+    var tuples = [];
+
+    for (var key in cache)
+        tuples.push([key, cache[key]]);
+
+    tuples.sort(function(a, b) {
+        a = a[1];
+        b = b[1];
+
+        return a < b ? 1 : (a > b ? -1 : 0);
+    });
+
+    //console.log(tuples);
+    //console.log();
+    tuples =tuples.slice(0, limit);
+    var a = []
+    for (var t in tuples)
+    {
+        var c = tuples[t][0].split('_');
+        a.push([c[0], c[1], c[2]]);
+    }
+
+    time = (new Date().getTime()) - time;
+    console.log(time);
+
+    //return [ [0,0,0], [255,100,100] ];
+    return a;
+}
 
 
 var G = [181, 230, 29];
@@ -254,6 +340,11 @@ console.log();
 console.log('CIEDE2000');
 console.log('G -> G2: ' + CIEDE2000(lab_G, lab_G2));
 console.log('G ->  Y: ' + CIEDE2000(lab_G, lab_Y));
+
+console.log('CMClc');
+console.log('G -> G2: ' + CMClc(lab_G, lab_G2));
+console.log('G ->  Y: ' + CMClc(lab_G, lab_Y));
+
 
 
 //console.log(ciede2000(p1, p2));

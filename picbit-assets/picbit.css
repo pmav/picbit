@@ -10,54 +10,66 @@ hr {
 
 #drop-zone {  
   text-align: center;
-  padding: 43px 0 40px 0;
+  padding: 26px 0 22px;
   font-size: 20px;
   font-weight: bold;
-  width: 500px;
-  color: #999;
+  width: 506px;
+  color: #000;
   
-  background: #CCC;
+  background: #DDD;
   float: left;
 
-  margin: 0 0 0 6px;
+  margin: 0 0 0 0;
 
 }
 
 #drop-zone.drop-zone-hover {
-    background: #EEE;
-    color: #000;
+    background: #000;
+    color: #DDD;
 }
 
-#controls {
-    margin: 0 0 0 0; 
-    
+#buttons, #stats {
+  display: inline-block;
+  margin: 4px 0 0 0;
+}
+
+#buttons {
+  float: left;
+}
+
+#stats {
+  float: right;
+}
+
+#options {
+    margin: 0 0 0 0;
     width: 280px;
     float: left;
 }
 
-#controls .form {
+#options .form {
   padding: 2px;
   display: inline-block;
-  
   font-weight: bold;
+  margin: 0 0 2px 0;
 }
 
-#controls .form select {
+#options .form select {
   width: 130px;
 }
 
-#controls .form .title-container {
+#options .form .title-container {
   width: 136px;
   display: inline-block;
 }
 
-#controls .form .title {
+#options .form .title {
   cursor: help;
   display: inline-block;
   border-bottom: 1px dotted #000;
 }
 
-#controls .form .small {
+#options .form .small {
   border: 1px solid red;
   font-weight: normal;
   font-size: 12px;

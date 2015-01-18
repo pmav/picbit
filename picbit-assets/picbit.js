@@ -140,7 +140,6 @@ var PICBIT = {
         }
     },
     
-
     handlers : {
 
         dragEnter : function(e) {
@@ -199,14 +198,20 @@ var PICBIT = {
 
         draw : function() {
             // Load current state from form.
+            var img = $(PICBIT.config.originalImageElement).get(0);
 
             // Pixel size.
             PICBIT.config.state.pixelSize = parseInt($(PICBIT.config.pixelSizeSelect).val(), 10);
 
             // Palette.
-            PICBIT.config.state.selectedPalette = PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()];
-            if (PICBIT.config.state.selectedPalette === 'original16')
-                PICBIT.config.selectedPalette = [ [0,0,0], [255,100,100] ];
+            switch($(PICBIT.config.paletteSelect).val())
+            {
+                case 'original16':
+                    PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getColorsByFrequency(initialImageData, 16); };
+                    break;
+                default:
+                    PICBIT.config.state.selectedPalette = PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()];
+            }
 
             // Color selection method.
             switch(parseInt($(PICBIT.config.colorSelectionSelect).val(), 10))
@@ -219,6 +224,9 @@ var PICBIT = {
                     break;
                 case 3:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
+                    break;
+                case 4:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
                     break;
             }
 
@@ -242,8 +250,6 @@ var PICBIT = {
             }
 
             // Process image.
-            var img = $(PICBIT.config.originalImageElement).get(0);
-
             var time = new Date().getTime();
             PICBIT.process.main(img);
             time = (new Date().getTime()) - time;
@@ -296,6 +302,10 @@ var PICBIT = {
              */
             image : function(initialImageData, finalImageData, w, h) {
 
+                if (typeof(PICBIT.config.state.selectedPalette) == "function") {
+                    PICBIT.config.state.selectedPalette(initialImageData);
+                }
+
                 var step = PICBIT.config.state.pixelSize;
 
                 for (var x = 0; x < w; x += step)
@@ -340,15 +350,13 @@ var PICBIT = {
                 // Aggregate points.
                 var p = PICBIT.config.state.pixelAggregationMethod(points);
 
-                // TODO Point cache.
-
                 // Select point color.
-                var closerColor, closerColorDistance = Number.MAX_VALUE;
+                var closerColor, closerColorDistance = 999999999;
 
                 for (var i = 0; i < palette.length; i++)
                 {
                     var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
-                    
+
                     if (currentColorDistance < closerColorDistance)
                     {
                         closerColorDistance = currentColorDistance;
@@ -495,6 +503,52 @@ var PICBIT = {
                 var dh = Math.sqrt(da * da + db * db - dc * dc);
              
                 return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
+            },
+
+            /**
+             *
+             * https://github.com/THEjoezack/ColorMine/blob/master/ColorMine/ColorSpaces/Comparisons/CmcComparison.cs
+             */
+            CMClc : function(p1, p2) {
+                var l1 = PICBIT.process.helpers.rgb2lab(p1);
+                var l2 = PICBIT.process.helpers.rgb2lab(p2);
+
+                var distanceDivided = PICBIT.process.distance.distanceDivided;
+                var _lightness = 2.0;
+                var _chroma = 1.0;
+
+                var aLab = {L: l1[0], A: l1[1], B: l1[2]};
+                var bLab = {L: l2[0], A: l2[1], B: l2[2]};
+
+                var deltaL = aLab.L - bLab.L;
+                var h = Math.atan2(aLab.B, aLab.A);
+                var c1 = Math.sqrt(aLab.A * aLab.A + aLab.B * aLab.B);
+                var c2 = Math.sqrt(bLab.A * bLab.A + bLab.B * bLab.B);
+                var deltaC = c1 - c2;
+                var deltaH = Math.sqrt((aLab.A - bLab.A) * (aLab.A - bLab.A) + (aLab.B - bLab.B) * (aLab.B - bLab.B) - deltaC * deltaC);
+                var c1_4 = c1 * c1;
+                c1_4 *= c1_4;
+                var t = 164 <= h || h >= 345
+                    ? .56 + Math.abs(.2 * Math.cos(h + 168.0))
+                    : .36 + Math.abs(.4 * Math.cos(h + 35.0));
+                var f = Math.sqrt(c1_4 / (c1_4 + 1900.0));
+                var sL = aLab.L < 16 ? .511 : (.040975 * aLab.L) / (1.0 + .01765 * aLab.L);
+                var sC = (.0638 * c1) / (1 + .0131 * c1) + .638;
+                var sH = sC * (f * t + 1 - f);
+                var differences = distanceDivided(deltaL, _lightness * sL) + distanceDivided(deltaC, _chroma * sC) + distanceDivided(deltaH, sH);
+                return Math.sqrt(differences);
+            },
+
+            distanceDivided : function(a, dividend) {
+                var adiv = a / dividend;
+                return adiv * adiv;
+            }
+        },
+
+        palette : {
+
+            getColorsByFrequency : function(initialImageData, limit) {
+                // TODO
             }
         },
         

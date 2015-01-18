@@ -35,7 +35,6 @@
         </div>
 
         <div class="box">
-
             <div id="canvas-container">
                 <img id="original-image" src="test-images/01.png" />
                 
@@ -46,7 +45,7 @@
 
         <div class="box">
 
-            <div id="controls">
+            <div id="options">
                 <div class="form">
                     <span class="title-container">
                         <span class="title" title="Size of pixels after processing, 4x4px means that a square with 16 pixels in the original image are transformed into one.">Pixel Size</span>
@@ -56,7 +55,6 @@
                         <option value="2">2x2px</option>
                         <option value="4" selected="selected">4x4px</option>
                         <option value="8">8x8px</option>
-                        <option value="12">12x12px</option>
                     </select>
                 </div>
                 
@@ -112,6 +110,7 @@
                         <option value="1" selected="selected">Euclidean</option>
                         <option value="2">CIE76</option>
                         <option value="3">CIE94</option>
+                        <option value="4">CMC l:c</option>
                     </select>
                 </div>
             </div>
@@ -120,15 +119,17 @@
                 Drop an image here!
             </div>
 
-            <div class="cl"></div>
-        </div>
-
-<p>
+<div id="buttons">
     <input type="button" id="button-random" value="Random" />
     <input type="button" id="button-redraw" value="Redraw" />
-        
+</div>
+
+<div id="stats">
     <span id="processing-time"></span>ms
-</p>
+</div>
+
+            <div class="cl"></div>
+        </div>
 
         <div class="box">
             <h2>Source Code</h2>
