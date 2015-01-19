@@ -302,12 +302,55 @@ var PICBIT = {
              */
             image : function(initialImageData, finalImageData, w, h) {
 
-                if (typeof(PICBIT.config.state.selectedPalette) == "function") {
-                    PICBIT.config.state.selectedPalette(initialImageData);
+                //if (typeof(PICBIT.config.state.selectedPalette) == "function") {
+                //    PICBIT.config.state.selectedPalette(initialImageData);
+                //}
+
+                var pixelArray = [];
+
+                for (var i = 0, r, g, b, a; i < initialImageData.data.length; i = i + 4) {
+                    r = initialImageData.data[i + 0];
+                    g = initialImageData.data[i + 1];
+                    b = initialImageData.data[i + 2];
+                    a = initialImageData.data[i + 3];
+                    
+                    // If pixel is mostly opaque and not white
+                    if (a >= 125) {
+                        if (!(r > 250 && g > 250 && b > 250)) {
+                            pixelArray.push([r, g, b]);
+                        }
+                    }
+                }
+                
+                var cmap = MMCQ.quantize(pixelArray, 16 + 1);
+                
+                console.log(cmap.palette());
+                //console.log(cmap.palette().length);
+                //console.log(pixelArray.length);
+
+                var newPixels = pixelArray.map(function(p) {
+                    return cmap.map(p);
+                });
+
+                console.log(newPixels.length);
+                console.log(newPixels[0]);
+                console.log(newPixels[100]);
+                console.log(newPixels[1000]);
+                console.log(newPixels[10000]);
+
+
+                for (var x = 0; x < finalImageData.data.length; x = x + 4)
+                {
+                    finalImageData.data[x + 0] = newPixels[x + 0];
+                    finalImageData.data[x + 1] = newPixels[x + 1];
+                    finalImageData.data[x + 2] = newPixels[x + 2];
+                    finalImageData.data[x + 3] = 255;
                 }
 
-                var step = PICBIT.config.state.pixelSize;
+                // --
 
+                var step = PICBIT.config.state.pixelSize;
+/*
                 for (var x = 0; x < w; x += step)
                 {
                     for (var y = 0; y < h; y += step)
@@ -338,6 +381,9 @@ var PICBIT = {
                         }
                     }
                 }
+*/
+
+                //PICBIT.process.helpers.rawImageCopy(initialImageData, finalImageData);
             },
 
             /**
@@ -548,11 +594,18 @@ var PICBIT = {
         palette : {
 
             getColorsByFrequency : function(initialImageData, limit) {
-                // TODO
+
             }
+
         },
         
         helpers : {
+
+
+            rawImageCopy : function(initialImageData, finalImageData) {
+                for (var i = 0; i < finalImageData.data.length; i++)
+                    finalImageData.data[i] = initialImageData.data[i];
+            },
 
             /**
              * Convert a (x, y) coord. to image index values.

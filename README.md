@@ -27,5 +27,8 @@ JavaScript image processing tests and basic example.
 - https://github.com/markusn/color-diff
 - https://github.com/altercation/solarized
 - https://github.com/THEjoezack/ColorMine
-- http://lokeshdhakar.com/projects/color-thief/
+
 - http://en.wikipedia.org/wiki/Color_quantization
+- http://lokeshdhakar.com/projects/color-thief/
+- https://gist.github.com/nrabinowitz/1104622
+- https://github.com/leeoniya/RgbQuant.js
