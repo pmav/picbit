@@ -11,8 +11,8 @@ JavaScript image processing tests and basic example.
 - ~~Palette: original 4, 8, 16~~
 - ~~Add CMC l:c~~
 - ~~Fix places with negative square roots~~
+- ~~Drop PHP~~
 
-- Drop PHP
 - Imgur export
 - Sources/links section
 - Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
