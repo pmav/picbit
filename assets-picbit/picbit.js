@@ -101,8 +101,6 @@ var PICBIT = {
         if(!window.FileReader)
             return;
 
-        console.log('a');
-
         // Register drag and drop events.
         var dropZone = $(PICBIT.config.dropZoneElement);
         dropZone.on('dragenter', PICBIT.handlers.dragEnter);
@@ -121,10 +119,11 @@ var PICBIT = {
         $(PICBIT.config.redrawButtonElement).click(PICBIT.handlers.draw);
 
         // Load initial image.
-        var img = $(PICBIT.config.originalImageElement).get(0);
-        img.onload = function() {
-            PICBIT.handlers.draw();
+        var image = new Image();
+        image.onload = function () {
+          PICBIT.handlers.draw();
         }
+        image.src = $(PICBIT.config.originalImageElement).attr("src");
     },
 
     helpers :  {
