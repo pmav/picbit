@@ -101,6 +101,8 @@ var PICBIT = {
         if(!window.FileReader)
             return;
 
+        console.log('a');
+
         // Register drag and drop events.
         var dropZone = $(PICBIT.config.dropZoneElement);
         dropZone.on('dragenter', PICBIT.handlers.dragEnter);
