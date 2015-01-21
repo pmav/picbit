@@ -16,8 +16,8 @@
 
     <script src="picbit-assets/jquery-2.1.3.min.js"></script>
     <script src="picbit-assets/picbit.js"></script>
-    <script src="picbit-assets/quantize.js"></script>
-    <script src="picbit-assets/RgbQuant.js"></script>
+    <!--  <script src="picbit-assets/quantize.js"></script> -->
+    <script src="picbit-assets/rgbquant.js"></script>
 </head>
 <body>
 
@@ -98,6 +98,8 @@
                         <option value="msWindows">MS Windows</option>
                         
                         <optgroup label="Original">
+                        <option value="original4">4 Colors</option>
+                        <option value="original8">8 Colors</option>
                         <option value="original16">16 Colors</option>
                     </select>
                 </div>

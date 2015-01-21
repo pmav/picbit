@@ -206,8 +206,14 @@ var PICBIT = {
             // Palette.
             switch($(PICBIT.config.paletteSelect).val())
             {
+                case 'original4':
+                    PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getOriginalColors(initialImageData, 4); };
+                    break;
+                case 'original8':
+                    PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getOriginalColors(initialImageData, 8); };
+                    break;
                 case 'original16':
-                    PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getColorsByFrequency(initialImageData, 16); };
+                    PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getOriginalColors(initialImageData, 16); };
                     break;
                 default:
                     PICBIT.config.state.selectedPalette = PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()];
@@ -302,12 +308,12 @@ var PICBIT = {
              */
             image : function(initialImageData, finalImageData, w, h) {
 
-                //if (typeof(PICBIT.config.state.selectedPalette) == "function") {
-                //    PICBIT.config.state.selectedPalette(initialImageData);
-                //}
+                if (typeof(PICBIT.config.state.selectedPalette) == "function") {
+                    PICBIT.config.state.selectedPalette(initialImageData);
+                }
 
-                var q = new RgbQuant({ colors: 8 });
-                q.sample(initialImageData);
+                //var q = new RgbQuant({ colors: 8 });
+                //q.sample(initialImageData);
                 //var a = q.reduce(initialImageData);
 
                 //for (var i = 0; i < a.length; i++)
@@ -366,6 +372,9 @@ var PICBIT = {
                 {
                     var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
 
+                    if (isNaN(currentColorDistance))
+                        console.log('NaN');
+
                     if (currentColorDistance < closerColorDistance)
                     {
                         closerColorDistance = currentColorDistance;
@@ -373,8 +382,59 @@ var PICBIT = {
                     }
                 }
 
+                if (closerColor === undefined)
+                {
+                    closerColorDistance = 999999999;
+
+                    for (var i = 0; i < palette.length; i++)
+                    {
+                        var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
+
+                        console.log(p+" "+palette[i]+" "+currentColorDistance);
+
+                        if (currentColorDistance < closerColorDistance)
+                        {
+                            closerColorDistance = currentColorDistance;
+                            closerColor = palette[i];
+                        }
+                    }
+                }
+
                 return [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
+            },
+
+            /*
+            point2 : function(points) {
+
+                var palette = PICBIT.config.state.selectedPalette;
+
+                for (var a = 0; a < points.length; a++)
+                {
+                    var p = points[a];
+
+                    // Select point color.
+                    var closerColor, closerColorDistance = 999999999;
+
+                    for (var i = 0; i < palette.length; i++)
+                    {
+                        var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
+
+                        if (currentColorDistance < closerColorDistance)
+                        {
+                            closerColorDistance = currentColorDistance;
+                            closerColor = palette[i];
+                        }
+                    }
+
+                    points[a] = [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
+                }
+
+                // Aggregate points.
+                var p = PICBIT.config.state.pixelAggregationMethod(points);
+
+                return p;
             }
+            */
         },
 
         aggregation : {
@@ -509,7 +569,9 @@ var PICBIT = {
                 var dc = c1 - c2;
              
                 var dl = x.l - y.l;
-                var dh = Math.sqrt(da * da + db * db - dc * dc);
+                var t = da * da + db * db - dc * dc;
+                t = t < 0 ? 0 : t;
+                var dh = Math.sqrt(t);
              
                 return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
             },
@@ -534,7 +596,9 @@ var PICBIT = {
                 var c1 = Math.sqrt(aLab.A * aLab.A + aLab.B * aLab.B);
                 var c2 = Math.sqrt(bLab.A * bLab.A + bLab.B * bLab.B);
                 var deltaC = c1 - c2;
-                var deltaH = Math.sqrt((aLab.A - bLab.A) * (aLab.A - bLab.A) + (aLab.B - bLab.B) * (aLab.B - bLab.B) - deltaC * deltaC);
+                var t = (aLab.A - bLab.A) * (aLab.A - bLab.A) + (aLab.B - bLab.B) * (aLab.B - bLab.B) - deltaC * deltaC;
+                t = t < 0 ? 0 : t;
+                var deltaH = Math.sqrt(t);
                 var c1_4 = c1 * c1;
                 c1_4 *= c1_4;
                 var t = 164 <= h || h >= 345
@@ -556,10 +620,11 @@ var PICBIT = {
 
         palette : {
 
-            getColorsByFrequency : function(initialImageData, limit) {
-
+            getOriginalColors : function(initialImageData, limit) {
+                var rgbQuant = new RgbQuant({ colors: limit });
+                rgbQuant.sample(initialImageData);
+                return rgbQuant.palette(true);
             }
-
         },
         
         helpers : {

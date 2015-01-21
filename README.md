@@ -7,15 +7,16 @@ JavaScript image processing tests and basic example.
 - ~~Redraw Button~~
 - ~~Time stats~~
 - ~~Form descriptions~~
-
 - ~~Pixel Aggregation - First and last~~
-- Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
-- Palette: top 2/4/8/16/32 from image
-- Test CIE functions
-- Add CIEDE2000
+- ~~Palette: original 4, 8, 16~~
 - ~~Add CMC l:c~~
-- User color thief from original16
+- ~~Fix places with negative square roots~~
 
+- Sources/links section
+- Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
+- Add CIEDE2000
+- Test CIE functions
+- Add Web Workers
 
 ### Links
 
