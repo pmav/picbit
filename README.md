@@ -12,7 +12,6 @@ JavaScript image processing tests and basic example.
 - ~~Add CMC l:c~~
 - ~~Fix places with negative square roots~~
 - ~~Drop PHP~~
-
 - Imgur export
 - Sources/links section
 - Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
