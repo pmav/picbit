@@ -509,7 +509,7 @@ var PICBIT = {
         distance : {
             
             /**
-             *
+             * Simple euclidean distance algorithm between RGB colors.
              */
             euclideanDistance : function(p1, p2) {
                 var r = Math.pow(p2[0] - p1[0], 2);
@@ -520,7 +520,7 @@ var PICBIT = {
             },
 
             /**
-             *
+             * CIE76 algorithm (LAB color space).
              */
             distanceCIE76 : function(p1, p2) {
                 var l1 = PICBIT.process.helpers.rgb2lab(p1);
@@ -534,8 +534,9 @@ var PICBIT = {
             },
 
             /**
+             * CIE94 algorithm (LAB color space).
              * 
-             * http://html5hub.com/exploring-color-matching-in-javascript/
+             * Source: http://html5hub.com/exploring-color-matching-in-javascript/
              */
             distanceCIE94 : function(p1, p2) {
                 var x = PICBIT.process.helpers.rgb2lab(p1);
@@ -578,8 +579,9 @@ var PICBIT = {
             },
 
             /**
+             * CMC:lc algorithm (LAB color space).
              *
-             * https://github.com/THEjoezack/ColorMine/blob/master/ColorMine/ColorSpaces/Comparisons/CmcComparison.cs
+             * Source: https://github.com/THEjoezack/ColorMine/blob/master/ColorMine/ColorSpaces/Comparisons/CmcComparison.cs
              */
             CMClc : function(p1, p2) {
                 var l1 = PICBIT.process.helpers.rgb2lab(p1);
@@ -662,7 +664,7 @@ var PICBIT = {
             /**
              * Convert a point from RGB to LAB color space.
              *
-             * http://stackoverflow.com/a/8433985
+             * Source: http://stackoverflow.com/a/8433985
              */
             rgb2lab : function(p) {
                 var R = p[0];

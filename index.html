@@ -27,8 +27,10 @@
             <h2>What is?</h2>
 
             <p>Picbit is a javascript image processing experiment. This can be used to give you some ideas on how to use the HTML 5 Canvas element to process images in real time and run basic filters.</p>
-
-            <p>All the processing being made is pixel oriented and no frameworks are used, except jQuery for basic manipulation of UI elements.</p>
+            <br>
+            <p>All the processing being made is pixel oriented and I'm using <a href="https://github.com/leeoniya/RgbQuant.js">RgbQuant.js</a> for color quantization. Many thanks to leeoniya for this amazing library.</p>
+            <br>
+            To save the generated image just <code>Right Click > Save Image As...</code>
         </div>
 
         <div class="box">
@@ -118,16 +120,49 @@
                 Drop an image here!
             </div>
 
-<div id="buttons">
-    <input type="button" id="button-random" value="Random" />
-    <input type="button" id="button-redraw" value="Redraw" />
-</div>
+            <div id="buttons">
+                <input type="button" id="button-random" value="Random" />
+                <input type="button" id="button-redraw" value="Redraw" />
+            </div>
 
-<div id="stats">
-    <span id="processing-time"></span>ms
-</div>
+            <div id="stats">
+                <span id="processing-time"></span>ms
+            </div>
 
             <div class="cl"></div>
+        </div>
+
+        <div class="box">
+            <h2>Links</h2>
+
+            <p>Some links used to create this tool. As always Wikipedia is a great starting point to learn about something that I don't have any know-how. In this particular case the topics about color difference and color quantization were very helpful.</p>
+            <br>
+
+            <h5>Color Difference</h5>
+            <ul>
+                <li><a href="http://en.wikipedia.org/wiki/Color_difference">http://en.wikipedia.org/wiki/Color_difference</a></li>
+                <li><a href="http://colormine.org">http://colormine.org</a></li>
+                <li><a href="https://github.com/THEjoezack/ColorMine">https://github.com/THEjoezack/ColorMine</a></li>
+                <li><a href="http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html">http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html</a></li>
+                <li><a href="http://stackoverflow.com/questions/13586999">http://stackoverflow.com/questions/13586999</a></li>
+                <li><a href="http://stackoverflow.com/a/8433985">http://stackoverflow.com/a/8433985</a></li>
+                <li><a href="https://github.com/markusn/color-diff">https://github.com/markusn/color-diff</a></li>
+            </ul>
+
+            <h5>Color Quantization</h5>
+            <ul>
+                <li><a href="http://en.wikipedia.org/wiki/Color_quantization">http://en.wikipedia.org/wiki/Color_quantization</a></li>
+                <li><a href="https://github.com/leeoniya/RgbQuant.js">https://github.com/leeoniya/RgbQuant.js</a></li>
+            </ul>
+
+            <h5>Palettes</h5>
+            <ul>
+                <li><a href="http://en.wikipedia.org/wiki/List_of_color_palettes">http://en.wikipedia.org/wiki/List_of_color_palettes</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/List_of_video_game_console_palettes">http://en.wikipedia.org/wiki/List_of_video_game_console_palettes</a></li>
+                <li><a href="http://ethanschoonover.com/solarized">http://ethanschoonover.com/solarized</a></li>
+                <li><a href="http://www.sron.nl/~pault/">http://www.sron.nl/~pault/</a></li>
+                <li><a href="http://colorbrewer2.org">http://colorbrewer2.org</a></li>
+            </ul>
         </div>
 
         <div class="box">
@@ -141,7 +176,7 @@
         </div>
 
     </div>
-    <div id="footer">Picbit | v1.0 | <a href="http://pmav.eu">pmav.eu</a> | 21/Jan/2015 | HTML 5 | This work is licensed under a <a rel="license" href="LICENSE.md">MIT License</a>.
+    <div id="footer">Picbit | v1.0 | <a href="http://pmav.eu">pmav.eu</a> | 21/Jan/2015 | HTML 5 | This work is licensed under a <a rel="license" href="LICENSE">MIT License</a>.
     </div>
 </div>
 

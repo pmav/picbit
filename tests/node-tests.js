@@ -1,3 +1,5 @@
+// This runs in node.js
+
 function rgb2lab(p) {
 
     var R = p[0];
@@ -74,8 +76,7 @@ function CIE76(l1, l2) {
     return (l + a + b);
 }
 
-function CIE94(x, y)
-{
+function CIE94(x, y) {
     var isTextiles = false;
 
     var x = {l: x[0], a: x[1], b: x[2]};
@@ -115,8 +116,7 @@ function CIE94(x, y)
     return Math.sqrt(Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)),2) + Math.pow((dh/(kh * sh)),2));
 }
 
-function CIEDE2000(c1,c2)
-{
+function CIEDE2000(c1,c2) {
     var sqrt = Math.sqrt;
     var pow = Math.pow;
     var cos = Math.cos;
@@ -220,9 +220,7 @@ function CIEDE2000(c1,c2)
 function degrees(n) { return n*(180/Math.PI); }
 function radians(n) { return n*(Math.PI/180); }
 
-
-function CMClc(x, y)
-{
+function CMClc(x, y) {
     //var aLab = colorA.To<Lab>();
     //var bLab = colorB.To<Lab>();
     var _lightness = 2.0;
@@ -309,7 +307,6 @@ function getColorsByFrequency(initialImageData, limit) {
     return a;
 }
 
-
 var G = [181, 230, 29];
 var G2 = [85, 255, 85]; // Light green.
 var Y = [255, 255, 85]; // Yellow.
@@ -355,7 +352,6 @@ console.log('CMClc');
 //console.log('G ->  Y: ' + CMClc(lab_G, lab_Y));
 
 console.log('C1 -> C2: ' + CMClc(lab_C1, lab_C2));
-
 
 
 //console.log(ciede2000(p1, p2));

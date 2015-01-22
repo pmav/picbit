@@ -1,7 +1,15 @@
-# picbit
-JavaScript image processing tests and basic example.
+# Picbit
+Picbit is a javascript image processing experiment. This can be used to give you some ideas on how to use the HTML 5 Canvas element to process images in real time and run basic filters.
 
 ### TODO
+
+- Imgur export
+- New Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
+- Add CIEDE2000 function
+- Add Web Workers support
+- Create images for examples section
+
+## Done
 
 - ~~Random Button~~
 - ~~Redraw Button~~
@@ -12,25 +20,4 @@ JavaScript image processing tests and basic example.
 - ~~Add CMC l:c~~
 - ~~Fix places with negative square roots~~
 - ~~Drop PHP~~
-- Imgur export
-- Sources/links section
-- Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
-- Add CIEDE2000
-- Test CIE functions
-- Add Web Workers
-
-### Links
-
-- http://colormine.org
-- http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
-- http://stackoverflow.com/questions/13586999/color-difference-similarity-between-two-values-with-js
-- http://en.wikipedia.org/wiki/Color_difference
-- http://stackoverflow.com/a/8433985
-- https://github.com/markusn/color-diff
-- https://github.com/altercation/solarized
-- https://github.com/THEjoezack/ColorMine
-
-- http://en.wikipedia.org/wiki/Color_quantization
-- http://lokeshdhakar.com/projects/color-thief/
-- https://gist.github.com/nrabinowitz/1104622
-- https://github.com/leeoniya/RgbQuant.js
+- ~~Sources/links section~~

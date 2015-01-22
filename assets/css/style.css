@@ -64,8 +64,7 @@ form fieldset {
     width: 387px;
 }
 
-form fieldset legend
-{
+form fieldset legend {
     font-size: 16px;
 }
 
@@ -144,10 +143,14 @@ form input.submit:hover {
     margin: 0;
 }
 
+#main .box h5 {
+    font-size: 14px;
+    margin: 0;
+}
+
 #main .box p, #main .box cite {
     margin: 3px 0 3px 0;
 }
-
 
 #main .box div.text-end p {
     margin: 4px 0 6px 0;
@@ -156,10 +159,14 @@ form input.submit:hover {
 #main .box .text, #main .box .text-end {
     margin: 40px 0 0 0;
 }
+
+ul {
+  margin: 8px 0;
+}
+
 /* -------------------------------------- */
 
-#controls div
-{
+#controls div {
     margin-top: 4px;
 }
 
