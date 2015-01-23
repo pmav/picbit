@@ -1,4 +1,7 @@
-
+/**
+ * Picbit, 2015
+ * http://pmav.eu
+ */
 
 $(document).ready(function() {
     PICBIT.main();
@@ -43,6 +46,7 @@ var PICBIT = {
         redrawButtonElement : '#button-redraw',
 
         processingTimeElement : '#processing-time',
+        paletteListElement : '#palette-list',
         
         /**
          * Max image width.
@@ -67,7 +71,7 @@ var PICBIT = {
             /**
              * Current palette.
              */
-            palette : null,
+            selectedPalette : null,
             
             /**
              * Current pixel aggregation method.
@@ -85,15 +89,100 @@ var PICBIT = {
          */
         palette : {
 
-            original16 : 'original16',
+            // 2 colors
 
-            blackAndWhite : [ [0,     0,   0], [255, 255, 255] ],
-            gameBoy : [ [17,   56, 17], [50,   98, 50], [139, 171, 36], [155, 187, 39] ],
-            teletext : [ [0,     0,   0], [0,    39, 251], [255,  48,  22], [255,  63, 252], [0,   249,  44], [0,   252, 254], [255, 253,  51], [255, 255, 255] ],
-            cga : [ [0,     0,   0], [85,  255, 255], [255,  85, 255], [255, 255, 255] ],
-            ega : [ [0,    0,    0], [0,    0,  170], [0,   170,   0], [0,   170, 170], [170,   0,   0], [170,   0, 170], [170,  85,   0], [170, 170, 170], [85,   85,  85], [85,   85, 255], [85,  255,  85], [85,  255, 255], [255,  85,  85], [255,  85, 255], [255, 255,  85], [255, 255, 255] ],
-            appleII : [ [0,     0,   0], [133,  59,  81], [80,   71, 137], [234,  93, 240], [0,   104,  82], [146, 146, 146], [0,   168, 241], [202, 195, 248], [81,   92,  15], [235, 127,  35], [146, 146, 146], [246, 185, 202], [0,   202,  41], [203, 211, 155], [154, 220, 203], [255, 255, 255] ],
-            msWindows : [ [0,     0,   0], [128,   0,   0], [0,   128,   0], [128, 128,   0], [0,     0, 128], [128,   0, 128], [0,   128, 128], [192, 192, 192], [128, 128, 128], [255,   0,   0], [1,   255,   0], [255, 255,   0], [0,     0, 255], [255,   0, 255], [1,   255, 255], [255, 255, 255] ]
+            blackAndWhite : [
+                [0,     0,   0],
+                [255, 255, 255]
+            ],
+
+            // 4 colors
+
+            gameBoy : [
+                [17,   56, 17],
+                [50,   98, 50],
+                [139, 171, 36],
+                [155, 187, 39]
+            ],
+
+            cga : [
+                [0,     0,   0],
+                [85,  255, 255],
+                [255,  85, 255],
+                [255, 255, 255]
+            ],
+
+            // 8 colors
+
+            teletext : [
+                [0,     0,   0],
+                [0,    39, 251],
+                [255,  48,  22],
+                [255,  63, 252],
+                [0,   249,  44],
+                [0,   252, 254],
+                [255, 253,  51],
+                [255, 255, 255]
+            ],
+
+            // 16 colors
+
+            ega : [
+                [0,    0,    0],
+                [0,    0,  170],
+                [0,   170,   0],
+                [0,   170, 170],
+                [170,   0,   0],
+                [170,   0, 170],
+                [170,  85,   0],
+                [170, 170, 170],
+                [85,   85,  85],
+                [85,   85, 255],
+                [85,  255,  85],
+                [85,  255, 255],
+                [255,  85,  85],
+                [255,  85, 255],
+                [255, 255,  85],
+                [255, 255, 255]
+            ],
+            
+            appleII : [
+                [0,     0,   0],
+                [133,  59,  81],
+                [80,   71, 137],
+                [234,  93, 240],
+                [0,   104,  82],
+                [146, 146, 146],
+                [0,   168, 241],
+                [202, 195, 248],
+                [81,   92,  15],
+                [235, 127,  35],
+                [146, 146, 146],
+                [246, 185, 202],
+                [0,   202,  41],
+                [203, 211, 155],
+                [154, 220, 203],
+                [255, 255, 255]
+            ],
+
+            msWindows : [
+                [0,     0,   0],
+                [128,   0,   0],
+                [0,   128,   0],
+                [128, 128,   0],
+                [0,     0, 128],
+                [128,   0, 128],
+                [0,   128, 128],
+                [192, 192, 192],
+                [128, 128, 128],
+                [255,   0,   0],
+                [1,   255,   0],
+                [255, 255,   0],
+                [0,     0, 255],
+                [255,   0, 255],
+                [1,   255, 255],
+                [255, 255, 255]
+            ]
         }
     },
 
@@ -109,10 +198,10 @@ var PICBIT = {
         dropZone.on('drop', PICBIT.handlers.dragDrop);
 
         // Register form events.
-        $('#select-pixel-aggregation-method').change(PICBIT.handlers.draw);
-        $('#select-pixel-size').change(PICBIT.handlers.draw);
-        $('#select-palette').change(PICBIT.handlers.draw);
-        $('#select-color-selection').change(PICBIT.handlers.draw);
+        $(PICBIT.config.pixelAggregationMethodSelect).change(PICBIT.handlers.draw);
+        $(PICBIT.config.pixelSizeSelect).change(PICBIT.handlers.draw);
+        $(PICBIT.config.paletteSelect).change(PICBIT.handlers.draw);
+        $(PICBIT.config.colorSelectionSelect).change(PICBIT.handlers.draw);
 
         // Register button events.
         $(PICBIT.config.randomButtonElement).click(PICBIT.handlers.random);
@@ -124,21 +213,6 @@ var PICBIT = {
           PICBIT.handlers.draw();
         }
         image.src = $(PICBIT.config.originalImageElement).attr("src");
-    },
-
-    helpers :  {
-        showPalette : function()
-        {
-            var s = '';
-
-            for (var i = 0; i < PICBIT.config.selectedPalette.length; i++)
-            {
-                var c = PICBIT.config.selectedPalette[i];
-                s += '<span class="color" style="background: rgb('+c[0]+','+c[1]+','+c[2]+')">'+c[0]+','+c[1]+','+c[2]+'</span> ';
-            }
-
-            $('#palette').html(s);
-        }
     },
     
     handlers : {
@@ -262,6 +336,7 @@ var PICBIT = {
             time = (new Date().getTime()) - time;
 
             $(PICBIT.config.processingTimeElement).html(time);
+            PICBIT.process.helpers.showPalette();
         }
     },
 
@@ -402,40 +477,7 @@ var PICBIT = {
                 }
 
                 return [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
-            },
-
-            /*
-            point2 : function(points) {
-
-                var palette = PICBIT.config.state.selectedPalette;
-
-                for (var a = 0; a < points.length; a++)
-                {
-                    var p = points[a];
-
-                    // Select point color.
-                    var closerColor, closerColorDistance = 999999999;
-
-                    for (var i = 0; i < palette.length; i++)
-                    {
-                        var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
-
-                        if (currentColorDistance < closerColorDistance)
-                        {
-                            closerColorDistance = currentColorDistance;
-                            closerColor = palette[i];
-                        }
-                    }
-
-                    points[a] = [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
-                }
-
-                // Aggregate points.
-                var p = PICBIT.config.state.pixelAggregationMethod(points);
-
-                return p;
             }
-            */
         },
 
         aggregation : {
@@ -659,6 +701,23 @@ var PICBIT = {
                 imageData.data[index + 1] = p[1];
                 imageData.data[index + 2] = p[2];
                 imageData.data[index + 3] = p[3];
+            },
+
+            /**
+             * Shows current palette.
+             */
+            showPalette : function() {
+                var html = '';
+                var count = PICBIT.config.state.selectedPalette.length;
+                var width = 100 / PICBIT.config.state.selectedPalette.length;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var c = PICBIT.config.state.selectedPalette[i];
+                    html += '<span class="color" style="background: rgb('+c[0]+','+c[1]+','+c[2]+'); width: '+width+'%"></span>';
+                }
+
+                $(PICBIT.config.paletteListElement).html(html);
             },
 
             /**

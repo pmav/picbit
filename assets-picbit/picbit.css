@@ -106,13 +106,11 @@ canvas {
 
 /* *** */
 
-#palette {
-  margin: 10px 0;
+#palette-list {
+    height: 28px;
 }
 
-#palette .color {
-  border: 1px solid black;
-  padding: 3px 10px;
-  margin: 0 2px 0 0;
-  line-height: 26px;
+#palette-list .color {
+    display: inline-block;
+    height: 28px;
 }

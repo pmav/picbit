@@ -8,6 +8,7 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - Add CIEDE2000 function
 - Add Web Workers support
 - Create images for examples section
+- New palettes
 
 ## Done
 
@@ -21,3 +22,4 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Fix places with negative square roots~~
 - ~~Drop PHP~~
 - ~~Sources/links section~~
+- ~~Show palette~~
