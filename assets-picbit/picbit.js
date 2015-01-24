@@ -111,6 +111,13 @@ var PICBIT = {
                 [255,  85, 255],
                 [255, 255, 255]
             ],
+            
+            grayscale : [
+                [  0,   0,   0],
+                [104, 104, 104],
+                [184, 184, 184],
+                [255, 255, 255]
+            ],
 
             // 8 colors
 
@@ -165,7 +172,7 @@ var PICBIT = {
                 [255, 255, 255]
             ],
 
-            msWindows : [
+            webColors : [
                 [0,     0,   0],
                 [128,   0,   0],
                 [0,   128,   0],
@@ -176,13 +183,34 @@ var PICBIT = {
                 [192, 192, 192],
                 [128, 128, 128],
                 [255,   0,   0],
-                [1,   255,   0],
+                [0,   255,   0],
                 [255, 255,   0],
                 [0,     0, 255],
                 [255,   0, 255],
-                [1,   255, 255],
+                [0,   255, 255],
                 [255, 255, 255]
+            ],
+
+            solarized : [
+                [  0,  43,  54],
+                [  7,  54,  66],
+                [ 88, 110, 117],
+                [101, 123, 131],
+                [131, 148, 150],
+                [147, 161, 161],
+                [238, 232, 213],
+                [253, 246, 227],
+                [181, 137,   0],
+                [203,  75,  22],
+                [220,  50,  47],
+                [211,  54, 130],
+                [108, 113, 196],
+                [ 38, 139, 210],
+                [ 42, 161, 152],
+                [133, 153,   0]
             ]
+
+
         }
     },
 
@@ -388,15 +416,6 @@ var PICBIT = {
                     PICBIT.config.state.selectedPalette(initialImageData);
                 }
 
-                //var q = new RgbQuant({ colors: 8 });
-                //q.sample(initialImageData);
-                //var a = q.reduce(initialImageData);
-
-                //for (var i = 0; i < a.length; i++)
-                    //initialImageData.data[i] = a[i];
-
-                // --
-
                 var step = PICBIT.config.state.pixelSize;
 
                 for (var x = 0; x < w; x += step)
@@ -448,8 +467,8 @@ var PICBIT = {
                 {
                     var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
 
-                    if (isNaN(currentColorDistance))
-                        console.log('NaN');
+                    //if (isNaN(currentColorDistance))
+                    //    console.log('NaN');
 
                     if (currentColorDistance < closerColorDistance)
                     {
@@ -458,6 +477,7 @@ var PICBIT = {
                     }
                 }
 
+                /*
                 if (closerColor === undefined)
                 {
                     closerColorDistance = 999999999;
@@ -466,8 +486,6 @@ var PICBIT = {
                     {
                         var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
 
-                        console.log(p+" "+palette[i]+" "+currentColorDistance);
-
                         if (currentColorDistance < closerColorDistance)
                         {
                             closerColorDistance = currentColorDistance;
@@ -475,6 +493,7 @@ var PICBIT = {
                         }
                     }
                 }
+                */
 
                 return [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
             }
@@ -707,14 +726,26 @@ var PICBIT = {
              * Shows current palette.
              */
             showPalette : function() {
+
+                var toHex = function(rgbColor) {
+                    var hexR = rgbColor[0].toString(16).toUpperCase();
+                    var hexG = rgbColor[1].toString(16).toUpperCase();
+                    var hexB = rgbColor[2].toString(16).toUpperCase();
+                    return '#' +
+                        (hexR.length == 1 ? '0' + hexR : hexR) +
+                        (hexG.length == 1 ? '0' + hexG : hexG) +
+                        (hexB.length == 1 ? '0' + hexB : hexB);
+                }
+
                 var html = '';
                 var count = PICBIT.config.state.selectedPalette.length;
-                var width = 100 / PICBIT.config.state.selectedPalette.length;
+                var width = (100 / count).toFixed(2);
 
                 for (var i = 0; i < count; i++)
                 {
-                    var c = PICBIT.config.state.selectedPalette[i];
-                    html += '<span class="color" style="background: rgb('+c[0]+','+c[1]+','+c[2]+'); width: '+width+'%"></span>';
+                    var color = PICBIT.config.state.selectedPalette[i];
+                    var hexColor = toHex(color);
+                    html += '<span class="color" style="background: '+hexColor+'; width: '+width+'%" title="'+hexColor+'"></span>';
                 }
 
                 $(PICBIT.config.paletteListElement).html(html);
@@ -730,32 +761,17 @@ var PICBIT = {
                 var G = p[1];
                 var B = p[2];
 
-                var var_R = R/255.0;
-                var var_G = G/255.0;
-                var var_B = B/255.0;
+                var varR = R/255.0;
+                var varG = G/255.0;
+                var varB = B/255.0;
 
-                if ( var_R > 0.04045 )
-                    var_R = Math.pow( (( var_R + 0.055 ) / 1.055 ), 2.4 );
-                else
-                    var_R = var_R / 12.92;
-                
-                if ( var_G > 0.04045 )
-                    var_G = Math.pow( ( ( var_G + 0.055 ) / 1.055 ), 2.4);
-                else
-                    var_G = var_G / 12.92;
-                
-                if ( var_B > 0.04045 )
-                    var_B = Math.pow( ( ( var_B + 0.055 ) / 1.055 ), 2.4);
-                else
-                    var_B = var_B / 12.92;
+                varR = (varR > 0.04045 ? Math.pow(((varR + 0.055) / 1.055), 2.4) : varR / 12.92) * 100.;
+                varG = (varG > 0.04045 ? Math.pow(((varG + 0.055) / 1.055), 2.4) : varG / 12.92) * 100.;
+                varB = (varB > 0.04045 ? Math.pow(((varB + 0.055) / 1.055), 2.4) : varB / 12.92) * 100.;
 
-                var_R = var_R * 100.;
-                var_G = var_G * 100.;
-                var_B = var_B * 100.;
-
-                var X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805;
-                var Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722;
-                var Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505;
+                var X = varR * 0.4124 + varG * 0.3576 + varB * 0.1805;
+                var Y = varR * 0.2126 + varG * 0.7152 + varB * 0.0722;
+                var Z = varR * 0.0193 + varG * 0.1192 + varB * 0.9505;
 
                 var var_X = X / 95.047;
                 var var_Y = Y / 100.000;
