@@ -676,16 +676,21 @@ var PICBIT = {
                 return Math.sqrt(differences);
             },
 
-            distanceDivided : function(a, dividend) {
-                var adiv = a / dividend;
-                return adiv * adiv;
+            distanceDivided : function(v, dividend) {
+                var r = v / dividend;
+                return r * r;
             }
         },
 
         palette : {
 
-            getOriginalColors : function(initialImageData, limit) {
-                var rgbQuant = new RgbQuant({ colors: limit });
+            /**
+             * Return top N must used colors from an image using RgbQuant.js
+             *
+             * Source: https://github.com/leeoniya/RgbQuant.js
+             */
+            getOriginalColors : function(initialImageData, topColorsCount) {
+                var rgbQuant = new RgbQuant({ colors: topColorsCount });
                 rgbQuant.sample(initialImageData);
                 return rgbQuant.palette(true);
             }
