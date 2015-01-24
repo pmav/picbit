@@ -723,7 +723,7 @@ var PICBIT = {
             },
 
             /**
-             * Shows current palette.
+             * Show current palette.
              */
             showPalette : function() {
 
@@ -756,47 +756,28 @@ var PICBIT = {
              *
              * Source: http://stackoverflow.com/a/8433985
              */
-            rgb2lab : function(p) {
-                var R = p[0];
-                var G = p[1];
-                var B = p[2];
+            rgb2lab : function(rgbColor) {
+                var r = rgbColor[0]/255.0;
+                var g = rgbColor[1]/255.0;
+                var b = rgbColor[2]/255.0;
 
-                var varR = R/255.0;
-                var varG = G/255.0;
-                var varB = B/255.0;
+                r = (r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : r / 12.92) * 100.;
+                g = (g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : g / 12.92) * 100.;
+                b = (b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : b / 12.92) * 100.;
 
-                varR = (varR > 0.04045 ? Math.pow(((varR + 0.055) / 1.055), 2.4) : varR / 12.92) * 100.;
-                varG = (varG > 0.04045 ? Math.pow(((varG + 0.055) / 1.055), 2.4) : varG / 12.92) * 100.;
-                varB = (varB > 0.04045 ? Math.pow(((varB + 0.055) / 1.055), 2.4) : varB / 12.92) * 100.;
+                var x = ((r * 0.4124) + (g * 0.3576) + (b * 0.1805)) / 95.047;
+                var y = ((r * 0.2126) + (g * 0.7152) + (b * 0.0722)) / 100.000;
+                var z = ((r * 0.0193) + (g * 0.1192) + (b * 0.9505)) / 108.883;
 
-                var X = varR * 0.4124 + varG * 0.3576 + varB * 0.1805;
-                var Y = varR * 0.2126 + varG * 0.7152 + varB * 0.0722;
-                var Z = varR * 0.0193 + varG * 0.1192 + varB * 0.9505;
+                x = x > 0.008856 ? Math.pow(x, 1./3.) : (7.787 * x) + (16. / 116.);
+                y = y > 0.008856 ? Math.pow(y, 1./3.) : (7.787 * y) + (16. / 116.);
+                z = z > 0.008856 ? Math.pow(z, 1./3.) : (7.787 * z) + (16. / 116.);
 
-                var var_X = X / 95.047;
-                var var_Y = Y / 100.000;
-                var var_Z = Z / 108.883;
-
-                if ( var_X > 0.008856 )
-                    var_X = Math.pow(var_X , ( 1./3. ) );
-                else
-                    var_X = ( 7.787 * var_X ) + ( 16. / 116. );
-                
-                if ( var_Y > 0.008856 )
-                    var_Y = Math.pow(var_Y , ( 1./3. ));
-                else
-                    var_Y = ( 7.787 * var_Y ) + ( 16. / 116. );
-                
-                if ( var_Z > 0.008856 )
-                    var_Z = Math.pow(var_Z , ( 1./3. ));
-                else
-                    var_Z = ( 7.787 * var_Z ) + ( 16. / 116. );
-
-                l_s = ( 116. * var_Y ) - 16.;
-                a_s = 500. * ( var_X - var_Y );
-                b_s = 200. * ( var_Y - var_Z );
-
-                return [l_s, a_s, b_s];
+                return [
+                    (116. * y) - 16., // l
+                    500. * (x - y), // a
+                    200. * (y - z), // b
+                ];
             }
         }
     }
