@@ -12,41 +12,30 @@ var PICBIT = {
     config : {
 
         /**
-         *
+         * DOM elements IDs.
          */
         originalImageElement : '#original-image',
-
-        /**
-         *
-         */
         exportImageElement : '#export-image',
-
-        /**
-         *
-         */
         dropZoneElement : '#drop-zone',
-
-        /**
-         *
-         */
         canvasElement : '#canvas',
+        processingTimeElement : '#processing-time',
+        paletteListElement : '#palette-list',
         
         /**
-         *
+         * CSS classes.
          */
         dropZoneHoverClass : 'drop-zone-hover',
 
-
+        /**
+         * DOM form elements IDs.
+         */
         pixelSizeSelect : '#select-pixel-size',
         paletteSelect : '#select-palette',
         colorSelectionSelect : '#select-color-selection',
         pixelAggregationMethodSelect : '#select-pixel-aggregation-method',
-
+        firstTransformationSelect : '#select-first-transformation',
         randomButtonElement : '#button-random',
         redrawButtonElement : '#button-redraw',
-
-        processingTimeElement : '#processing-time',
-        paletteListElement : '#palette-list',
         
         /**
          * Max image width.
@@ -82,6 +71,13 @@ var PICBIT = {
              * Current color selection method.
              */
             colorSelectionMethod : null,
+
+            /**
+             * First transformation to apply:
+             * 1: aggregation,
+             * 2: reduce palette.
+             */
+            firstTransformation : 1,
         },
 
         /**
@@ -230,7 +226,8 @@ var PICBIT = {
         $(PICBIT.config.pixelSizeSelect).change(PICBIT.handlers.draw);
         $(PICBIT.config.paletteSelect).change(PICBIT.handlers.draw);
         $(PICBIT.config.colorSelectionSelect).change(PICBIT.handlers.draw);
-
+        $(PICBIT.config.firstTransformationSelect).change(PICBIT.handlers.draw);
+        
         // Register button events.
         $(PICBIT.config.randomButtonElement).click(PICBIT.handlers.random);
         $(PICBIT.config.redrawButtonElement).click(PICBIT.handlers.draw);
@@ -240,7 +237,7 @@ var PICBIT = {
         image.onload = function () {
           PICBIT.handlers.draw();
         }
-        image.src = $(PICBIT.config.originalImageElement).attr("src");
+        image.src = $(PICBIT.config.originalImageElement).attr('src');
     },
     
     handlers : {
@@ -294,6 +291,7 @@ var PICBIT = {
             setRandomOption(PICBIT.config.paletteSelect);
             setRandomOption(PICBIT.config.colorSelectionSelect);
             setRandomOption(PICBIT.config.pixelAggregationMethodSelect);
+            setRandomOption(PICBIT.config.firstTransformationSelect);
 
             // Draw.
             PICBIT.handlers.draw();
@@ -358,12 +356,18 @@ var PICBIT = {
                     break;
             }
 
+            // First transformation.
+            PICBIT.config.state.firstTransformation = parseInt($(PICBIT.config.firstTransformationSelect).val(), 10);
+
             // Process image.
             var time = new Date().getTime();
             PICBIT.process.main(img);
             time = (new Date().getTime()) - time;
 
+            // Show process time.
             $(PICBIT.config.processingTimeElement).html(time);
+
+            // Update used palette on DOM.
             PICBIT.process.helpers.showPalette();
         }
     },
@@ -455,48 +459,27 @@ var PICBIT = {
              */
             point : function(points) {
 
-                var palette = PICBIT.config.state.selectedPalette;
-
-                // Aggregate points.
-                var p = PICBIT.config.state.pixelAggregationMethod(points);
-
-                // Select point color.
-                var closerColor, closerColorDistance = 999999999;
-
-                for (var i = 0; i < palette.length; i++)
+                if (PICBIT.config.state.firstTransformation === 1)
                 {
-                    var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
+                    // Aggregate points (pixelate).
+                    var newPoint = PICBIT.config.state.pixelAggregationMethod(points);
 
-                    //if (isNaN(currentColorDistance))
-                    //    console.log('NaN');
-
-                    if (currentColorDistance < closerColorDistance)
-                    {
-                        closerColorDistance = currentColorDistance;
-                        closerColor = palette[i];
-                    }
+                    // Select point color (reduce palette).
+                    return PICBIT.process.distance.closerColor(newPoint);
                 }
-
-                /*
-                if (closerColor === undefined)
+                else if (PICBIT.config.state.firstTransformation === 2)
                 {
-                    closerColorDistance = 999999999;
+                    var newPoints = [];
 
-                    for (var i = 0; i < palette.length; i++)
-                    {
-                        var currentColorDistance = PICBIT.config.state.colorSelectionMethod(p, palette[i]);
+                    // Select point color (reduce palette).
+                    for (var j = 0; j < points.length; j++)
+                        newPoints.push(PICBIT.process.distance.closerColor(points[j]));
 
-                        if (currentColorDistance < closerColorDistance)
-                        {
-                            closerColorDistance = currentColorDistance;
-                            closerColor = palette[i];
-                        }
-                    }
+                    // Aggregate points (pixelate).
+                    return PICBIT.process.distance.closerColor(PICBIT.config.state.pixelAggregationMethod(newPoints));
                 }
-                */
-
-                return [closerColor[0], closerColor[1], closerColor[2], PICBIT.config.alphaValue];
             }
+
         },
 
         aggregation : {
@@ -518,7 +501,7 @@ var PICBIT = {
                 g = Math.ceil(g / t);
                 b = Math.ceil(b / t);
 
-                return [r, g, b, PICBIT.config.alphaValue];
+                return [r, g, b];
             },
             
             darker : function(points) {
@@ -536,7 +519,7 @@ var PICBIT = {
                     }
                 }
 
-                return [c[0], c[1], c[2], PICBIT.config.alphaValue];
+                return [c[0], c[1], c[2]];
             },
             
             lighter : function(points) {
@@ -555,7 +538,7 @@ var PICBIT = {
                     }
                 }
 
-                return [c[0], c[1], c[2], PICBIT.config.alphaValue];
+                return [c[0], c[1], c[2]];
             },
 
             firstPixel : function(points) {
@@ -569,6 +552,28 @@ var PICBIT = {
         
         distance : {
             
+            /**
+             * Get the closest color to a point from a palette based on distance using diferent algorithms.
+             */
+            closerColor : function(point) {
+
+                var palette = PICBIT.config.state.selectedPalette;
+                var closerColor, closerColorDistance = 999999999;
+
+                for (var i = 0; i < palette.length; i++)
+                {
+                    var currentColorDistance = PICBIT.config.state.colorSelectionMethod(point, palette[i]);
+
+                    if (currentColorDistance < closerColorDistance)
+                    {
+                        closerColorDistance = currentColorDistance;
+                        closerColor = palette[i];
+                    }
+                }
+
+                return closerColor;
+            },
+
             /**
              * Simple euclidean distance algorithm between RGB colors.
              */
@@ -705,8 +710,7 @@ var PICBIT = {
                 return [
                     imageData.data[index + 0],
                     imageData.data[index + 1],
-                    imageData.data[index + 2],
-                    imageData.data[index + 3]
+                    imageData.data[index + 2]
                 ];
             },
 
@@ -717,7 +721,7 @@ var PICBIT = {
                 imageData.data[index + 0] = p[0];
                 imageData.data[index + 1] = p[1];
                 imageData.data[index + 2] = p[2];
-                imageData.data[index + 3] = p[3];
+                imageData.data[index + 3] = PICBIT.config.alphaValue;
             },
 
             /**

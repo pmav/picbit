@@ -4,28 +4,27 @@ img {
 
 hr {
   border: 0;
-  border-top: 1px dotted #AAA;
+  border-top: 1px dotted #AAAAAA;
   margin: 12px 0;
 }
 
 #drop-zone {  
+  padding: 40px 0px 35px;
+  margin: 0 0 0 0;
+  
+  background: #DDDDDD;
   text-align: center;
-  padding: 26px 0 22px;
   font-size: 20px;
   font-weight: bold;
-  width: 506px;
-  color: #000;
+  color: #000000;
   
-  background: #DDD;
+  width: 506px;
   float: left;
-
-  margin: 0 0 0 0;
-
 }
 
 #drop-zone.drop-zone-hover {
-    background: #000;
-    color: #DDD;
+  background: #000000;
+  color: #DDDDDD;
 }
 
 #buttons, #stats {
@@ -42,16 +41,16 @@ hr {
 }
 
 #options {
-    margin: 0 0 0 0;
-    width: 280px;
-    float: left;
+  margin: 0 0 0 0;
+  width: 280px;
+  float: left;
 }
 
 #options .form {
-  padding: 2px;
   display: inline-block;
   font-weight: bold;
   margin: 0 0 2px 0;
+  padding: 2px;
 }
 
 #options .form select {
@@ -59,21 +58,20 @@ hr {
 }
 
 #options .form .title-container {
-  width: 136px;
   display: inline-block;
+  width: 136px;
 }
 
 #options .form .title {
-  cursor: help;
+  border-bottom: 1px dotted #000000;
   display: inline-block;
-  border-bottom: 1px dotted #000;
+  cursor: help;
 }
 
 #options .form .small {
   border: 1px solid red;
   font-weight: normal;
   font-size: 12px;
-  
 }
 
 .cl {
@@ -81,30 +79,26 @@ hr {
   clear: both;
 }
 
-/* *** */
-
 #original-image {
   display: none;
 }
 
-canvas {
+#canvas {
   display: none;
   height: 0;
 }
 
 #canvas-container {
-   text-align: center;
-   margin: 0;
-   padding: 0;
+  text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
 #canvas-container img {
-    border: 0;
-    padding: 0;
-    vertical-align: middle;
+  vertical-align: middle;
+  padding: 0;
+  border: 0;
 }
-
-/* *** */
 
 #palette-list {
     height: 28px;

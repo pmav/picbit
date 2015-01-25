@@ -107,13 +107,25 @@
                 
                 <div class="form">
                     <span class="title-container">
-                        <span class="title" title="Function used to select which color from the palette should be used to repalce the original color after agreggation.">Color Selection</span>
+                        <span class="title" title="Function used to select which color from the palette should be used to repalce the original color.">Color Selection</span>
                     </span>
                     <select id="select-color-selection">
                         <option value="1" selected="selected">Euclidean</option>
                         <option value="2">CIE76</option>
                         <option value="3">CIE94</option>
                         <option value="4">CMC l:c</option>
+                    </select>
+                </div>
+
+                <br>
+
+                <div class="form">
+                    <span class="title-container">
+                        <span class="title" title="Which transformation will be applied in the first place: aggregation (pixelate or reducing the palette).">1st Transformation</span>
+                    </span>
+                    <select id="select-first-transformation">
+                        <option value="1">Aggregation</option>
+                        <option value="2">Reduce Palette</option>
                     </select>
                 </div>
             </div>
