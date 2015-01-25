@@ -595,30 +595,21 @@ var PICBIT = {
             },
 
             /**
-             * CIE94 algorithm (LAB color space).
+             * CIE94 algorithm in Graphic Arts mode (LAB color space).
              * 
              * Source: http://html5hub.com/exploring-color-matching-in-javascript/
              */
             distanceCIE94 : function(p1, p2) {
                 var x = PICBIT.process.helpers.rgb2lab(p1);
                 var y = PICBIT.process.helpers.rgb2lab(p2);
-                var isTextiles = false;
 
                 var x = { l: x[0], a: x[1], b: x[2] };
                 var y = { l: y[0], a: y[1], b: y[2] };
-                labx = x;
-                laby = y;
-                var k2, k1, kl, kh = 1, kc = 1;
 
-                if (isTextiles) {
-                    k2 = 0.014;
-                    k1 = 0.048;
-                    kl = 2;
-                } else {
-                    k2 = 0.015;
-                    k1 = 0.045;
-                    kl = 1;
-                }
+                // Graphic Arts values.
+                var k2 = 0.015;
+                var k1 = 0.045;
+                var kl = 1;
              
                 var c1 = Math.sqrt(x.a * x.a + x.b * x.b);
                 var c2 = Math.sqrt(y.a * y.a + y.b * y.b);
@@ -635,7 +626,9 @@ var PICBIT = {
                 var t = da * da + db * db - dc * dc;
                 t = t < 0 ? 0 : t;
                 var dh = Math.sqrt(t);
-             
+                
+                var kh = 1;
+                var kc = 1;
                 return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
             },
 
