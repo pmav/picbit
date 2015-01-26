@@ -210,6 +210,8 @@ var PICBIT = {
         }
     },
 
+    cache  : {},
+
     main : function() {
         if(!window.FileReader)
             return;
@@ -270,6 +272,7 @@ var PICBIT = {
             var img = $(PICBIT.config.originalImageElement).get(0);
             img.src = this.result;
             img.onload = function() {
+                PICBIT.cache = {}; // Reset cache.
                 PICBIT.handlers.draw();
             }
         },
@@ -304,6 +307,25 @@ var PICBIT = {
             // Pixel size.
             PICBIT.config.state.pixelSize = parseInt($(PICBIT.config.pixelSizeSelect).val(), 10);
 
+            // Pixel aggregation method.
+            switch(parseInt($(PICBIT.config.pixelAggregationMethodSelect).val(), 10)) {
+                case 1:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.average;
+                    break;
+                case 2:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.lighter;
+                    break;
+                case 3:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.darker;
+                    break;
+                case 4:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.firstPixel;
+                    break;
+                case 5:
+                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.lastPixel;
+                    break;
+            }
+
             // Palette.
             switch($(PICBIT.config.paletteSelect).val())
             {
@@ -334,25 +356,6 @@ var PICBIT = {
                     break;
                 case 4:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
-                    break;
-            }
-
-            // Pixel aggregation method.
-            switch(parseInt($(PICBIT.config.pixelAggregationMethodSelect).val(), 10)) {
-                case 1:
-                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.average;
-                    break;
-                case 2:
-                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.lighter;
-                    break;
-                case 3:
-                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.darker;
-                    break;
-                case 4:
-                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.firstPixel;
-                    break;
-                case 5:
-                    PICBIT.config.state.pixelAggregationMethod = PICBIT.process.aggregation.lastPixel;
                     break;
             }
 
@@ -420,6 +423,10 @@ var PICBIT = {
                     PICBIT.config.state.selectedPalette(initialImageData);
                 }
 
+                if (PICBIT.config.state.firstTransformation === 3) {
+                    PICBIT.cache['c'] = PICBIT.process.palette.getOriginalColors(initialImageData, PICBIT.config.state.selectedPalette.length);
+                }
+
                 var step = PICBIT.config.state.pixelSize;
 
                 for (var x = 0; x < w; x += step)
@@ -478,6 +485,14 @@ var PICBIT = {
                     // Aggregate points (pixelate).
                     return PICBIT.process.distance.closerColor(PICBIT.config.state.pixelAggregationMethod(newPoints));
                 }
+                else if (PICBIT.config.state.firstTransformation === 3)
+                {
+                    // Aggregate points (pixelate).
+                    var newPoint = PICBIT.config.state.pixelAggregationMethod(points);
+
+                    // Select point color (reduce palette).
+                    return PICBIT.process.distance.fakeColor1(newPoint);
+                }
             }
 
         },
@@ -530,7 +545,6 @@ var PICBIT = {
                 for (var i = 0; i < t; i++)
                 {
                     var t1 = (points[i][0] + points[i][1] + points[i][2]) / 3;
-
                     if (t1 > cs)
                     {
                         c = points[i];
@@ -572,6 +586,31 @@ var PICBIT = {
                 }
 
                 return closerColor;
+            },
+
+            fakeColor1 : function(point) {
+
+                var palette = PICBIT.cache['c'];
+                var closerColor, closerColorDistance = 999999999;
+
+                for (var i = 0; i < palette.length; i++)
+                {
+                    var currentColorDistance = PICBIT.config.state.colorSelectionMethod(point, palette[i]);
+
+                    if (currentColorDistance < closerColorDistance)
+                    {
+                        closerColorDistance = currentColorDistance;
+                        closerColor = palette[i];
+                    }
+                }
+
+                point = closerColor;
+
+                for (var i = 0; i < palette.length; i++)
+                {
+                    if (palette[i][0] === point[0] && palette[i][1] === point[1] && palette[i][2] === point[2])
+                        return PICBIT.config.state.selectedPalette[i];
+                }
             },
 
             /**
@@ -634,6 +673,7 @@ var PICBIT = {
                 
                 var kh = 1;
                 var kc = 1;
+
                 return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
             },
 
@@ -671,6 +711,7 @@ var PICBIT = {
                 var sC = (.0638 * c1) / (1 + .0131 * c1) + .638;
                 var sH = sC * (f * t + 1 - f);
                 var differences = distanceDivided(deltaL, _lightness * sL) + distanceDivided(deltaC, _chroma * sC) + distanceDivided(deltaH, sH);
+                
                 return Math.sqrt(differences);
             },
 
@@ -688,9 +729,16 @@ var PICBIT = {
              * Source: https://github.com/leeoniya/RgbQuant.js
              */
             getOriginalColors : function(initialImageData, topColorsCount) {
-                var rgbQuant = new RgbQuant({ colors: topColorsCount });
-                rgbQuant.sample(initialImageData);
-                return rgbQuant.palette(true);
+                var key = 'getOriginalColors_' + topColorsCount;
+                
+                if (PICBIT.cache[key] === undefined)
+                {
+                    var rgbQuant = new RgbQuant({ colors: topColorsCount });
+                    rgbQuant.sample(initialImageData);
+                    PICBIT.cache[key] = rgbQuant.palette(true);
+                }
+
+                return PICBIT.cache[key];
             }
         },
         

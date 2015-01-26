@@ -3,7 +3,6 @@ Picbit is a javascript image processing experiment. This can be used to give you
 
 ### TODO
 
-- Palette cache from original4, 8, 16
 - Imgur export
 - Add CIEDE2000 function
 - Add Web Workers support
@@ -25,4 +24,6 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Sources/links section~~
 - ~~Show palette~~
 - ~~New palettes~~
-- ~~Add option to reduce palette first, then pixelate, and vice-versa~
+- ~~Add option to reduce palette first, then pixelate, and vice-versa~~
+- ~~Palette cache for original 4, 8, 16~~
+- ~~Color mapping: reduce image to N colors and map them to a N color palette (Fake Color 1)~~
