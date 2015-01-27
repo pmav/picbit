@@ -17,7 +17,7 @@ var PICBIT = {
         originalImageElement : '#original-image',
         exportImageElement : '#export-image',
         dropZoneElement : '#drop-zone',
-        canvasElement : '#canvas',
+        canvasElement : '#draw-canvas',
         processingTimeElement : '#processing-time',
         paletteListElement : '#palette-list',
         

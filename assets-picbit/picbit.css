@@ -8,6 +8,11 @@ hr {
   margin: 12px 0;
 }
 
+canvas {
+  display: none;
+  height: 0;
+}
+
 #drop-zone {  
   padding: 40px 0px 35px;
   margin: 0 0 0 0;
@@ -81,11 +86,6 @@ hr {
 
 #original-image {
   display: none;
-}
-
-#canvas {
-  display: none;
-  height: 0;
 }
 
 #canvas-container {
