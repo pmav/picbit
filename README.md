@@ -3,14 +3,13 @@ Picbit is a javascript image processing experiment. This can be used to give you
 
 ### TODO
 
-- Imgur export
 - Add CIEDE2000 function
 - Add Web Workers support
-- Create images for examples section
+- Create images for example section
 - New Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
 - Dithering: http://en.m.wikipedia.org/wiki/Floyd–Steinberg_dithering
 
-## Done
+### Done
 
 - ~~Random Button~~
 - ~~Redraw Button~~
@@ -27,3 +26,4 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Add option to reduce palette first, then pixelate, and vice-versa~~
 - ~~Palette cache for original 4, 8, 16~~
 - ~~Color mapping: reduce image to N colors and map them to a N color palette (Fake Color 1)~~
+- ~~Imgur export~~

@@ -36,6 +36,7 @@ var PICBIT = {
         firstTransformationSelect : '#select-first-transformation',
         randomButtonElement : '#button-random',
         redrawButtonElement : '#button-redraw',
+        exportButtonElement : '#button-export',
         
         /**
          * Max image width.
@@ -233,6 +234,7 @@ var PICBIT = {
         // Register button events.
         $(PICBIT.config.randomButtonElement).click(PICBIT.handlers.random);
         $(PICBIT.config.redrawButtonElement).click(PICBIT.handlers.draw);
+        $(PICBIT.config.exportButtonElement).click(PICBIT.handlers.exportImage);
 
         // Load initial image.
         var image = new Image();
@@ -298,6 +300,27 @@ var PICBIT = {
 
             // Draw.
             PICBIT.handlers.draw();
+        },
+
+        exportImage : function() {
+            $.ajax({
+                url: 'https://api.imgur.com/3/image',
+                type: 'POST',
+                headers: { "Authorization": "Client-ID c29f91c26993e7b" },
+                data: {
+                    image: $(PICBIT.config.canvasElement).get(0).toDataURL("image/png").split(',')[1],
+                    title: 'Made with Picbit',
+                    description: 'Picbit - http://pmav.eu/stuff/picbit'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    var win = window.open('http://imgur.com/' + response.data.id, '_blank');
+                    win.focus();
+                },
+                error: function (error) {
+                    alert('Error: ' + error);
+                }
+            });
         },
 
         draw : function() {
