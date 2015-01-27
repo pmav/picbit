@@ -304,21 +304,21 @@ var PICBIT = {
 
         exportImage : function() {
             $.ajax({
-                url: 'https://api.imgur.com/3/image',
+                url: 'https://api.imgur.com/3/upload',
                 type: 'POST',
-                headers: { "Authorization": "Client-ID c29f91c26993e7b" },
+                dataType: 'json',
+                headers: { "Authorization": "Client-ID 8da63dc6d4d03e7" },
                 data: {
                     image: $(PICBIT.config.canvasElement).get(0).toDataURL("image/png").split(',')[1],
                     title: 'Made with Picbit',
                     description: 'Picbit - http://pmav.eu/stuff/picbit'
                 },
-                dataType: 'json',
                 success: function (response) {
                     var win = window.open('http://imgur.com/' + response.data.id, '_blank');
                     win.focus();
                 },
                 error: function (error) {
-                    alert('Error: ' + error);
+                    alert('Error: ' + error.data);
                 }
             });
         },
