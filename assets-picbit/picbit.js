@@ -380,6 +380,9 @@ var PICBIT = {
                 case 4:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
                     break;
+                case 5:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000;
+                    break;
             }
 
             // First transformation.
@@ -698,6 +701,112 @@ var PICBIT = {
                 var kc = 1;
 
                 return Math.pow((dl/(kl * sl)),2) + Math.pow((dc/(kc * sc)), 2) + Math.pow((dh/(kh * sh)), 2);
+            },
+
+            /**
+             * CIEDE2000 algorithm (LAB color space).
+             *
+             * Source: https://github.com/markusn/color-diff
+             */
+            distanceCIEDE2000 : function (p1, p2) {
+                var c1 = PICBIT.process.helpers.rgb2lab(p1);
+                var c2 = PICBIT.process.helpers.rgb2lab(p2);
+
+                var radians = PICBIT.process.distance.radians;
+                var hp_f = PICBIT.process.distance.hp_f;
+                var dhp_f = PICBIT.process.distance.dhp_f;
+                var a_hp_f = PICBIT.process.distance.a_hp_f;
+
+                var L1 = c1[0], a1 = c1[1], b1 = c1[2];
+                var L2 = c2[0], a2 = c2[1], b2 = c2[2];
+                var kL = 1, kC = 1, kH = 1; // Weight factors
+
+                // Step 1: Calculate C1p, C2p, h1p, h2p
+                var C1 = Math.sqrt(Math.pow(a1, 2) + Math.pow(b1, 2));
+                var C2 = Math.sqrt(Math.pow(a2, 2) + Math.pow(b2, 2));
+
+                var a_C1_C2 = (C1 + C2) / 2.0;
+                var G = 0.5 * (1 - Math.sqrt(Math.pow(a_C1_C2, 7.0) / (Math.pow(a_C1_C2, 7.0) + Math.pow(25.0, 7.0))));
+
+                var a1p = (1.0 + G) * a1;
+                var a2p = (1.0 + G) * a2;
+
+                var C1p = Math.sqrt(Math.pow(a1p, 2) + Math.pow(b1, 2));
+                var C2p = Math.sqrt(Math.pow(a2p, 2) + Math.pow(b2, 2));
+
+                var h1p = hp_f(b1, a1p);
+                var h2p = hp_f(b2, a2p);
+
+                // Step 2: Calculate dLp, dCp, dHp
+                var dLp = L2 - L1;
+                var dCp = C2p - C1p;
+
+                var dhp = dhp_f(C1, C2, h1p, h2p);
+                var dHp = 2 * Math.sqrt(C1p * C2p) * Math.sin(radians(dhp) / 2.0);
+
+                // Step 3: Calculate CIEDE2000 Color-Difference
+                var a_L = (L1 + L2) / 2.0;
+                var a_Cp = (C1p + C2p) / 2.0;
+
+                var a_hp = a_hp_f(C1, C2, h1p, h2p);
+                var T = 1 - 0.17 * Math.cos(radians(a_hp - 30)) + 0.24 * Math.cos(radians(2 * a_hp)) + 0.32 * Math.cos(radians(3 * a_hp + 6)) - 0.20 * Math.cos(radians(4 * a_hp - 63));
+                var d_ro = 30 * Math.exp(-(Math.pow((a_hp - 275) / 25, 2)));
+                var RC = Math.sqrt((Math.pow(a_Cp, 7.0)) / (Math.pow(a_Cp, 7.0) + Math.pow(25.0, 7.0)));
+                var SL = 1 + ((0.015 * Math.pow(a_L - 50, 2)) / Math.sqrt(20 + Math.pow(a_L - 50, 2.0)));
+                var SC = 1 + 0.045 * a_Cp;
+                var SH = 1 + 0.015 * a_Cp * T;
+                var RT = -2 * RC * Math.sin(radians(2 * d_ro));
+                var dE = Math.sqrt(Math.pow(dLp / (SL * kL), 2) + Math.pow(dCp / (SC * kC), 2) + Math.pow(dHp / (SH * kH), 2) + RT * (dCp / (SC * kC)) * (dHp / (SH * kH)));
+
+                return dE;
+            },
+
+            hp_f : function(x, y) {
+                if (x == 0 && y == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    var tmphp = PICBIT.process.distance.degrees(Math.atan2(x,y));
+
+                    if(tmphp >= 0)
+                        return tmphp
+                    else
+                        return tmphp + 360;
+                }
+            },
+
+            dhp_f : function(C1, C2, h1p, h2p) {
+                if (C1 * C2 == 0)
+                    return 0;
+                if (Math.abs(h2p - h1p) <= 180)
+                    return h2p - h1p;
+                if ((h2p - h1p) > 180)
+                    return (h2p - h1p) - 360;
+                if ((h2p - h1p) < -180)
+                    return (h2p - h1p) + 360;
+                throw (new Error());
+            },
+
+            a_hp_f : function(C1, C2, h1p, h2p) {
+                if (C1 * C2 == 0)
+                    return h1p + h2p;
+                if (Math.abs(h1p - h2p) <= 180)
+                    return (h1p + h2p) / 2.0;
+                if ((Math.abs(h1p - h2p) > 180) && ((h1p + h2p) < 360))
+                    return (h1p + h2p + 360) / 2.0;
+                if ((Math.abs(h1p - h2p) > 180) && ((h1p + h2p) >= 360))
+                    return (h1p + h2p - 360) / 2.0;
+                throw (new Error());
+            },
+
+            degrees : function (n) {
+                return n * (180 / Math.PI);
+            },
+            
+            radians : function (n) {
+                return n * (Math.PI / 180);
             },
 
             /**

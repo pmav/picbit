@@ -3,7 +3,6 @@ Picbit is a javascript image processing experiment. This can be used to give you
 
 ### TODO
 
-- Add CIEDE2000 function
 - Add Web Workers support
 - Create images for example section
 - New Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
@@ -27,3 +26,4 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Palette cache for original 4, 8, 16~~
 - ~~Color mapping: reduce image to N colors and map them to a N color palette (Fake Color 1)~~
 - ~~Imgur export~~
+- ~~Add CIEDE2000 function~~
