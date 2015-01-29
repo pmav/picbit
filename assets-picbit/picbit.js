@@ -76,7 +76,8 @@ var PICBIT = {
             /**
              * First transformation to apply:
              * 1: aggregation,
-             * 2: reduce palette.
+             * 2: reduce palette,
+             * 3: Fake color #1
              */
             firstTransformation : 1,
         },
@@ -89,22 +90,22 @@ var PICBIT = {
             // 2 colors
 
             blackAndWhite : [
-                [0,     0,   0],
+                [  0,   0,   0],
                 [255, 255, 255]
             ],
 
             // 4 colors
 
             gameBoy : [
-                [17,   56, 17],
-                [50,   98, 50],
+                [ 17,  56, 17],
+                [ 50,  98, 50],
                 [139, 171, 36],
                 [155, 187, 39]
             ],
 
             cga : [
-                [0,     0,   0],
-                [85,  255, 255],
+                [  0,   0,   0],
+                [ 85, 255, 255],
                 [255,  85, 255],
                 [255, 255, 255]
             ],
@@ -119,12 +120,12 @@ var PICBIT = {
             // 8 colors
 
             teletext : [
-                [0,     0,   0],
-                [0,    39, 251],
+                [  0,   0,   0],
+                [  0,  39, 251],
                 [255,  48,  22],
                 [255,  63, 252],
-                [0,   249,  44],
-                [0,   252, 254],
+                [  0, 249,  44],
+                [  0, 252, 254],
                 [255, 253,  51],
                 [255, 255, 255]
             ],
@@ -132,18 +133,18 @@ var PICBIT = {
             // 16 colors
 
             ega : [
-                [0,    0,    0],
-                [0,    0,  170],
-                [0,   170,   0],
-                [0,   170, 170],
+                [  0,   0,   0],
+                [  0,   0, 170],
+                [  0, 170,   0],
+                [  0, 170, 170],
                 [170,   0,   0],
                 [170,   0, 170],
                 [170,  85,   0],
                 [170, 170, 170],
-                [85,   85,  85],
-                [85,   85, 255],
-                [85,  255,  85],
-                [85,  255, 255],
+                [ 85,  85,  85],
+                [ 85,  85, 255],
+                [ 85, 255,  85],
+                [ 85, 255, 255],
                 [255,  85,  85],
                 [255,  85, 255],
                 [255, 255,  85],
@@ -151,40 +152,40 @@ var PICBIT = {
             ],
             
             appleII : [
-                [0,     0,   0],
-                [133,  59,  81],
-                [80,   71, 137],
-                [234,  93, 240],
-                [0,   104,  82],
+                [  0,   0,   0],
+                [132,  59,  81],
+                [ 81,  73, 136],
+                [232,  97, 238],
+                [  0, 104,  82],
                 [146, 146, 146],
-                [0,   168, 241],
-                [202, 195, 248],
-                [81,   92,  15],
-                [235, 127,  35],
+                [  0, 169, 238],
+                [203, 196, 246],
+                [ 81, 92,   23],
+                [232, 126,  48],
                 [146, 146, 146],
-                [246, 185, 202],
-                [0,   202,  41],
-                [203, 211, 155],
-                [154, 220, 203],
+                [244, 185, 202],
+                [  0, 200,  53],
+                [202, 210, 158],
+                [157, 220, 203],
                 [255, 255, 255]
             ],
 
             webColors : [
-                [0,     0,   0],
+                [  0,   0,   0],
                 [128,   0,   0],
-                [0,   128,   0],
+                [  0, 128,   0],
                 [128, 128,   0],
-                [0,     0, 128],
+                [  0,   0, 128],
                 [128,   0, 128],
-                [0,   128, 128],
+                [  0, 128, 128],
                 [192, 192, 192],
                 [128, 128, 128],
                 [255,   0,   0],
-                [0,   255,   0],
+                [  0, 255,   0],
                 [255, 255,   0],
-                [0,     0, 255],
+                [  0,   0, 255],
                 [255,   0, 255],
-                [0,   255, 255],
+                [  0, 255, 255],
                 [255, 255, 255]
             ],
 
@@ -206,8 +207,6 @@ var PICBIT = {
                 [ 42, 161, 152],
                 [133, 153,   0]
             ]
-
-
         }
     },
 
@@ -526,10 +525,7 @@ var PICBIT = {
         aggregation : {
 
             average : function(points) {
-                var r = 0,
-                    g = 0,
-                    b = 0,
-                    t = points.length;
+                var r = 0, g = 0, b = 0, t = points.length;
 
                 for (var i = 0; i < t; i++)
                 {
@@ -546,9 +542,7 @@ var PICBIT = {
             },
             
             darker : function(points) {
-                var c,
-                    cs = 256,
-                    t = points.length;
+                var c, cs = 256, t = points.length;
 
                 for (var i = 0; i < t; i++)
                 {
@@ -564,9 +558,7 @@ var PICBIT = {
             },
             
             lighter : function(points) {
-                var c,
-                    cs = -1,
-                    t = points.length;
+                var c, cs = -1, t = points.length;
 
                 for (var i = 0; i < t; i++)
                 {
@@ -763,18 +755,13 @@ var PICBIT = {
 
             hp_f : function(x, y) {
                 if (x == 0 && y == 0)
-                {
                     return 0;
-                }
-                else
-                {
-                    var tmphp = PICBIT.process.distance.degrees(Math.atan2(x,y));
 
-                    if(tmphp >= 0)
-                        return tmphp
-                    else
-                        return tmphp + 360;
-                }
+                var tmphp = PICBIT.process.distance.degrees(Math.atan2(x,y));
+                if(tmphp >= 0)
+                    return tmphp
+                else
+                    return tmphp + 360;
             },
 
             dhp_f : function(C1, C2, h1p, h2p) {
@@ -908,40 +895,30 @@ var PICBIT = {
              * Show current palette.
              */
             showPalette : function() {
-
-                var toHex = function(rgbColor) {
-                    var hexR = rgbColor[0].toString(16).toUpperCase();
-                    var hexG = rgbColor[1].toString(16).toUpperCase();
-                    var hexB = rgbColor[2].toString(16).toUpperCase();
-                    return '#' +
-                        (hexR.length == 1 ? '0' + hexR : hexR) +
-                        (hexG.length == 1 ? '0' + hexG : hexG) +
-                        (hexB.length == 1 ? '0' + hexB : hexB);
-                }
-
                 var html = '';
                 var count = PICBIT.config.state.selectedPalette.length;
                 var width = (100 / count).toFixed(2);
-
+                var sortedPalette = PICBIT.process.helpers.sortColors(PICBIT.config.state.selectedPalette);
+                
                 for (var i = 0; i < count; i++)
                 {
-                    var color = PICBIT.config.state.selectedPalette[i];
-                    var hexColor = toHex(color);
-                    html += '<span class="color" style="background: '+hexColor+'; width: '+width+'%" title="'+hexColor+'"></span>';
+                    var color = sortedPalette[i];
+                    var hexColor = PICBIT.process.helpers.rgb2Hex(color);
+                    html += '<span class="color" style="background: ' + hexColor + '; width: ' + width + '%" title="' + hexColor + '"></span>';
                 }
 
                 $(PICBIT.config.paletteListElement).html(html);
             },
 
             /**
-             * Convert a point from RGB to LAB color space.
+             * Convert a color from RGB to LAB color space.
              *
              * Source: http://stackoverflow.com/a/8433985
              */
             rgb2lab : function(rgbColor) {
-                var r = rgbColor[0]/255.0;
-                var g = rgbColor[1]/255.0;
-                var b = rgbColor[2]/255.0;
+                var r = rgbColor[0] / 255.0;
+                var g = rgbColor[1] / 255.0;
+                var b = rgbColor[2] / 255.0;
 
                 r = (r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : r / 12.92) * 100.;
                 g = (g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : g / 12.92) * 100.;
@@ -951,15 +928,101 @@ var PICBIT = {
                 var y = ((r * 0.2126) + (g * 0.7152) + (b * 0.0722)) / 100.000;
                 var z = ((r * 0.0193) + (g * 0.1192) + (b * 0.9505)) / 108.883;
 
-                x = x > 0.008856 ? Math.pow(x, 1./3.) : (7.787 * x) + (16. / 116.);
-                y = y > 0.008856 ? Math.pow(y, 1./3.) : (7.787 * y) + (16. / 116.);
-                z = z > 0.008856 ? Math.pow(z, 1./3.) : (7.787 * z) + (16. / 116.);
+                x = x > 0.008856 ? Math.pow(x, 1. / 3.) : (7.787 * x) + (16. / 116.);
+                y = y > 0.008856 ? Math.pow(y, 1. / 3.) : (7.787 * y) + (16. / 116.);
+                z = z > 0.008856 ? Math.pow(z, 1. / 3.) : (7.787 * z) + (16. / 116.);
 
                 return [
                     (116. * y) - 16., // l
                     500. * (x - y), // a
                     200. * (y - z), // b
                 ];
+            },
+
+            /**
+             * Convert a color from RGB to Hex format.
+             */
+            rgb2Hex : function(rgbColor) {
+                var hexR = rgbColor[0].toString(16).toUpperCase();
+                var hexG = rgbColor[1].toString(16).toUpperCase();
+                var hexB = rgbColor[2].toString(16).toUpperCase();
+                return '#' +
+                    (hexR.length == 1 ? '0' + hexR : hexR) +
+                    (hexG.length == 1 ? '0' + hexG : hexG) +
+                    (hexB.length == 1 ? '0' + hexB : hexB);
+            },
+
+            rgb2hsv : function(rgbColor, add) {
+                add = add || false;
+
+                // Get the RGB values to calculate the Hue.
+                var r = rgbColor[0];
+                var g = rgbColor[1];
+                var b = rgbColor[2];
+
+                // Getting the Max and Min values for Chroma.
+                var max = Math.max.apply(Math, rgbColor);
+                var min = Math.min.apply(Math, rgbColor);
+
+                // Variables for HSV value of hex color.
+                var chr = max - min;
+                var hue = 0;
+                var val = max;
+                var sat = 0;
+
+                if (val > 0)
+                {
+                    // Calculate Saturation only if Value isn't 0.
+                    sat = chr / val;
+
+                    if (sat > 0)
+                    {
+                        if (r == max)
+                        {
+                            hue = 60 * (((g - min) - (b - min)) / chr);
+                            if (hue < 0)
+                                hue += 360;
+                        }
+                        else if (g == max)
+                        {
+                            hue = 120 + 60 * (((b - min) - (r - min)) / chr);
+                        }
+                        else if (b == max)
+                        {
+                            hue = 240 + 60 * (((r - min) - (g - min)) / chr);
+                        }
+                    }
+                }
+
+                if (add)
+                {
+                    rgbColor[3] = hue;
+                    rgbColor[4] = sat;
+                    rgbColor[5] = val;
+
+                    return rgbColor;
+                }
+                else
+                {
+                    return [hue, sat, val];
+                }
+            },
+
+            sortColors : function(colors) {
+                for(var i = 0; i < colors.length; i++)
+                    colors[i] = PICBIT.process.helpers.rgb2hsv(colors[i], true);
+
+                colors.sort(function(a, b) {
+                    return a[3] - b[3]; // Sort by hue;
+                });
+
+                var sortedColors = [];
+                for(var i = 0; i < colors.length; i++)
+                {
+                    sortedColors[i] = [colors[i][0], colors[i][1], colors[i][2]];
+                }
+
+                return sortedColors;
             }
         }
     }

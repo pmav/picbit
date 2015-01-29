@@ -27,3 +27,4 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Color mapping: reduce image to N colors and map them to a N color palette (Fake Color 1)~~
 - ~~Imgur export~~
 - ~~Add CIEDE2000 function~~
+- ~~Palette sorting by hue~~
