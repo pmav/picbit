@@ -361,7 +361,7 @@ var PICBIT = {
                     PICBIT.config.state.selectedPalette = function(initialImageData) { PICBIT.config.state.selectedPalette  = PICBIT.process.palette.getOriginalColors(initialImageData, 16); };
                     break;
                 default:
-                    PICBIT.config.state.selectedPalette = PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()];
+                    PICBIT.config.state.selectedPalette = PICBIT.process.helpers.sortColors(PICBIT.config.palette[$(PICBIT.config.paletteSelect).val()]);
             }
 
             // Color selection method.
@@ -450,6 +450,7 @@ var PICBIT = {
 
                 if (PICBIT.config.state.firstTransformation === 3) {
                     PICBIT.cache['c'] = PICBIT.process.palette.getOriginalColors(initialImageData, PICBIT.config.state.selectedPalette.length);
+                    PICBIT.cache['c'] = PICBIT.process.helpers.sortColors(PICBIT.cache['c']);
                 }
 
                 var step = PICBIT.config.state.pixelSize;
