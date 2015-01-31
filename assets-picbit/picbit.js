@@ -271,11 +271,11 @@ var PICBIT = {
 
         loadEnd : function(e, file) {
             var img = $(PICBIT.config.originalImageElement).get(0);
-            img.src = this.result;
             img.onload = function() {
                 PICBIT.cache = {}; // Reset cache.
                 PICBIT.handlers.draw();
             }
+            img.src = this.result;
         },
 
         random : function() {
