@@ -54,10 +54,14 @@
         this.i32idx = {};
         // {i32:rgb}
         this.i32rgb = {};
-        // max number of color-mappings to cache
-        this.cacheLimit = opts.cacheLimit || 2e5;
+        // enable color caching (also incurs overhead of cache misses and cache building)
+        this.useCache = opts.useCache !== false;
+        // min color occurance count needed to qualify for caching
+        this.cacheFreq = opts.cacheFreq || 10;
         // allows pre-defined palettes to be re-indexed (enabling palette compacting and sorting)
         this.reIndex = opts.reIndex || this.idxrgb.length == 0;
+        // selection of color-distance equation
+        this.colorDist = opts.colorDist == "manhattan" ? distManhattan : distEuclidean;
 
         // if pre-defined palette, build lookups
         if (this.idxrgb.length > 0) {
@@ -264,7 +268,7 @@
 
                 // dithering strength
                 if (this.dithDelta) {
-                    var dist = colorDist([r1, g1, b1], [r2, g2, b2]);
+                    var dist = this.colorDist([r1, g1, b1], [r2, g2, b2]);
                     if (dist < this.dithDelta)
                         continue;
                 }
@@ -341,12 +345,14 @@
         // int32-ify values
         idxi32 = idxi32.map(function(v){return +v;});
 
-        var preDef = this.idxrgb.length > 0;
-
         this.reducePal(idxi32);
 
         if (!noSort && this.reIndex)
             this.sortPal();
+
+        // build cache of top histogram colors
+        if (this.useCache)
+            this.cacheHistogram(idxi32);
 
         this.palLocked = true;
     };
@@ -446,7 +452,7 @@
                             var pxj = idxrgb[j], i32j = idxi32[j];
                             if (!pxj) continue;
 
-                            var dist = colorDist(pxi, pxj);
+                            var dist = this.colorDist(pxi, pxj);
 
                             if (dist < thold) {
                                 // store index,rgb,dist
@@ -607,7 +613,7 @@
         if ((i32 & 0xff000000) >> 24 == 0)
             return null;
 
-        if (this.i32idx[i32])
+        if (this.useCache && (""+i32) in this.i32idx)
             return this.i32idx[i32];
 
         var min = 1000,
@@ -622,7 +628,7 @@
         for (var i = 0; i < len; i++) {
             if (!this.idxrgb[i]) continue;      // sparse palettes
 
-            var dist = colorDist(rgb, this.idxrgb[i]);
+            var dist = this.colorDist(rgb, this.idxrgb[i]);
 
             if (dist < min) {
                 min = dist;
@@ -630,17 +636,12 @@
             }
         }
 
-        this.cacheColor(i32, idx);
-
         return idx;
     };
 
-    var numCached = 0;
-
-    RgbQuant.prototype.cacheColor = function cacheColor(i32, idx) {
-        if (numCached == this.cacheLimit || this.i32idx[i32]) return;
-        this.i32idx[i32] = idx;
-        numCached++;
+    RgbQuant.prototype.cacheHistogram = function cacheHistogram(idxi32) {
+        for (var i = 0, i32 = idxi32[i]; i < idxi32.length && this.histogram[i32] >= this.cacheFreq; i32 = idxi32[i++])
+            this.i32idx[i32] = this.nearestIndex(i32);
     };
 
     function HueStats(numGroups, minCols) {
@@ -715,17 +716,26 @@
 
     var rd = 255,
         gd = 255,
-        bd = 255,
-        maxDist = Math.sqrt(Pr*rd*rd + Pg*gd*gd + Pb*bd*bd);
+        bd = 255;
 
-
-    // returns perceptual Euclidean color distance
-    function colorDist(rgb0, rgb1) {
+    var euclMax = Math.sqrt(Pr*rd*rd + Pg*gd*gd + Pb*bd*bd);
+    // perceptual Euclidean color distance
+    function distEuclidean(rgb0, rgb1) {
         var rd = rgb1[0]-rgb0[0],
             gd = rgb1[1]-rgb0[1],
             bd = rgb1[2]-rgb0[2];
 
-        return Math.sqrt(Pr*rd*rd + Pg*gd*gd + Pb*bd*bd) / maxDist;
+        return Math.sqrt(Pr*rd*rd + Pg*gd*gd + Pb*bd*bd) / euclMax;
+    }
+
+    var manhMax = Pr*rd + Pg*gd + Pb*bd;
+    // perceptual Manhattan color distance
+    function distManhattan(rgb0, rgb1) {
+        var rd = Math.abs(rgb1[0]-rgb0[0]),
+            gd = Math.abs(rgb1[1]-rgb0[1]),
+            bd = Math.abs(rgb1[2]-rgb0[2]);
+
+        return (Pr*rd + Pg*gd + Pb*bd) / manhMax;
     }
 
     // http://rgb2hsl.nichabi.com/javascript-function.php
@@ -834,6 +844,7 @@
                 can.height = img.naturalHeight;
                 ctx = can.getContext("2d");
                 ctx.drawImage(img,0,0);
+            case "Canvas":
             case "HTMLCanvasElement":
                 can = can || img;
                 ctx = ctx || can.getContext("2d");
@@ -915,5 +926,10 @@
 
     // expose
     this.RgbQuant = RgbQuant;
+
+    // expose to commonJS
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = RgbQuant;
+    }
 
 }).call(this);
