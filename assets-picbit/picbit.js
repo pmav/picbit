@@ -371,15 +371,18 @@ var PICBIT = {
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.euclideanDistance;
                     break;
                 case 2:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.manhattanDistance;
                     break;
                 case 3:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
                     break;
                 case 4:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
                     break;
                 case 5:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    break;
+                case 6:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000;
                     break;
             }
@@ -641,6 +644,17 @@ var PICBIT = {
                 var b = Math.pow(p2[2] - p1[2], 2);
 
                 return r + g + b;
+            },
+
+            /**
+             * Manhattan distance algorithm between RGB colors.
+             *
+             * https://en.wikipedia.org/wiki/Taxicab_geometry
+             */
+            manhattanDistance : function(p1, p2) {
+                return Math.abs(p1[0] - p2[0]) +
+                    Math.abs(p1[1] - p2[1]) +
+                    Math.abs(p1[2] - p2[2]);
             },
 
             /**

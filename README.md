@@ -28,3 +28,4 @@ Picbit is a javascript image processing experiment. This can be used to give you
 - ~~Imgur export~~
 - ~~Add CIEDE2000 function~~
 - ~~Palette sorting by hue~~
+- ~~Manhattan distance~~
