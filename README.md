@@ -3,7 +3,7 @@ Picbit is a javascript image processing experiment. This can be used to give you
 
 ### TODO
 
-- Distances: http://calculator.vhex.net/function-index/distance
+- Distances: http://calculator.vhex.net/function-index/distance / http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.pdist.html
 - Add Web Workers support
 - Create images for example section
 - New Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/

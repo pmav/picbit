@@ -374,15 +374,18 @@ var PICBIT = {
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.manhattanDistance;
                     break;
                 case 3:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.canberraDistance;
                     break;
                 case 4:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
                     break;
                 case 5:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
                     break;
                 case 6:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    break;
+                case 7:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000;
                     break;
             }
@@ -639,11 +642,9 @@ var PICBIT = {
              * Simple euclidean distance algorithm between RGB colors.
              */
             euclideanDistance : function(p1, p2) {
-                var r = Math.pow(p2[0] - p1[0], 2);
-                var g = Math.pow(p2[1] - p1[1], 2);
-                var b = Math.pow(p2[2] - p1[2], 2);
-
-                return r + g + b;
+                return Math.pow(p2[0] - p1[0], 2) +
+                       Math.pow(p2[1] - p1[1], 2) +
+                       Math.pow(p2[2] - p1[2], 2);
             },
 
             /**
@@ -653,8 +654,19 @@ var PICBIT = {
              */
             manhattanDistance : function(p1, p2) {
                 return Math.abs(p1[0] - p2[0]) +
-                    Math.abs(p1[1] - p2[1]) +
-                    Math.abs(p1[2] - p2[2]);
+                       Math.abs(p1[1] - p2[1]) +
+                       Math.abs(p1[2] - p2[2]);
+            },
+
+            /**
+             * Canberra distance algorithm between RGB colors.
+             *
+             * https://en.wikipedia.org/wiki/Canberra_distance
+             */
+            canberraDistance : function(p1, p2) {
+                return (Math.abs(p1[0] - p2[0]) / (p1[0] + p2[0])) +
+                       (Math.abs(p1[1] - p2[1]) / (p1[1] + p2[1])) +
+                       (Math.abs(p1[2] - p2[2]) / (p1[2] + p2[2]));
             },
 
             /**
