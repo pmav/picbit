@@ -377,15 +377,18 @@ var PICBIT = {
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.canberraDistance;
                     break;
                 case 4:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.brayCurtisDistance;
                     break;
                 case 5:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
                     break;
                 case 6:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
                     break;
                 case 7:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
+                    break;
+                case 8:
                     PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000;
                     break;
             }
@@ -670,17 +673,25 @@ var PICBIT = {
             },
 
             /**
+             * Bray-Curtis distance algorithm between RGB colors.
+             *
+             * http://en.wikipedia.org/wiki/Bray%E2%80%93Curtis_dissimilarity
+             */
+            brayCurtisDistance : function(p1, p2) {
+                return (Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])) /
+                       (Math.abs(p1[0] + p2[0]) + Math.abs(p1[1] + p2[1]) + Math.abs(p1[2] + p2[2]));
+            },
+
+            /**
              * CIE76 algorithm (LAB color space).
              */
             distanceCIE76 : function(p1, p2) {
                 var l1 = PICBIT.process.helpers.rgb2lab(p1);
                 var l2 = PICBIT.process.helpers.rgb2lab(p2);
 
-                var l = Math.pow(l2[0] - l1[0], 2);
-                var a = Math.pow(l2[1] - l1[1], 2);
-                var b = Math.pow(l2[2] - l1[2], 2);
-
-                return l + a + b;
+                return Math.pow(l2[0] - l1[0], 2) +
+                       Math.pow(l2[1] - l1[1], 2) +
+                       Math.pow(l2[2] - l1[2], 2);
             },
 
             /**
