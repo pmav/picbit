@@ -19,6 +19,7 @@ var PICBIT = {
         dropZoneElement : '#drop-zone',
         canvasElement : '#draw-canvas',
         processingTimeElement : '#processing-time',
+        combinationsCountElement : '#combinations-count',
         paletteListElement : '#palette-list',
         
         /**
@@ -30,9 +31,9 @@ var PICBIT = {
          * DOM form elements IDs.
          */
         pixelSizeSelect : '#select-pixel-size',
+        pixelAggregationMethodSelect : '#select-pixel-aggregation-method',
         paletteSelect : '#select-palette',
         colorSelectionSelect : '#select-color-selection',
-        pixelAggregationMethodSelect : '#select-pixel-aggregation-method',
         firstTransformationSelect : '#select-first-transformation',
         randomButtonElement : '#button-random',
         redrawButtonElement : '#button-redraw',
@@ -235,6 +236,9 @@ var PICBIT = {
         $(PICBIT.config.redrawButtonElement).click(PICBIT.handlers.draw);
         $(PICBIT.config.exportButtonElement).click(PICBIT.handlers.exportImage);
 
+        // ...
+        PICBIT.helpers.countCombinations();
+
         // Load initial image.
         var image = new Image();
         image.onload = function () {
@@ -406,6 +410,18 @@ var PICBIT = {
 
             // Update used palette on DOM.
             PICBIT.process.helpers.showPalette();
+        }
+    },
+
+    helpers : {
+
+        countCombinations : function() {
+            var total =  $(PICBIT.config.pixelSizeSelect).find('option').size() *
+                         $(PICBIT.config.pixelAggregationMethodSelect).find('option').size() *
+                         $(PICBIT.config.paletteSelect).find('option').size() *
+                         $(PICBIT.config.colorSelectionSelect).find('option').size() *
+                         $(PICBIT.config.firstTransformationSelect).find('option').size();
+            $(PICBIT.config.combinationsCountElement).text(total);
         }
     },
 

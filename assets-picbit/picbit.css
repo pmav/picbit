@@ -42,7 +42,12 @@ canvas {
 }
 
 #stats {
+  line-height: 24px;
   float: right;
+}
+
+#stats span {
+  font-weight: bold;
 }
 
 #options {
