@@ -372,29 +372,23 @@ var PICBIT = {
             switch(parseInt($(PICBIT.config.colorSelectionSelect).val(), 10))
             {
                 case 1:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.euclideanDistance;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.euclideanDistance; break;
                 case 2:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.manhattanDistance;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.manhattanDistance; break;
                 case 3:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.canberraDistance;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.canberraDistance; break;
                 case 4:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.brayCurtisDistance;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.brayCurtisDistance; break;
                 case 5:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.chebyshevDistance; break;
                 case 6:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE76; break;
                 case 7:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIE94; break;
                 case 8:
-                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000;
-                    break;
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.CMClc; break;
+                case 9:
+                    PICBIT.config.state.colorSelectionMethod = PICBIT.process.distance.distanceCIEDE2000; break;
             }
 
             // First transformation.
@@ -696,6 +690,17 @@ var PICBIT = {
             brayCurtisDistance : function(p1, p2) {
                 return (Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])) /
                        (Math.abs(p1[0] + p2[0]) + Math.abs(p1[1] + p2[1]) + Math.abs(p1[2] + p2[2]));
+            },
+
+            /**
+             * Chebyshev distance algorithm between RGB colors.
+             *
+             * http://en.wikipedia.org/wiki/Chebyshev_distance
+             */
+            chebyshevDistance : function(p1, p2) {
+                return Math.max(
+                    Math.abs(p1[2] - p2[2]),
+                    Math.max(Math.abs(p1[0] - p2[0]), Math.abs(p1[1] - p2[1])));
             },
 
             /**

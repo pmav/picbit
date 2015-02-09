@@ -27,7 +27,8 @@ Online here: http://pmav.eu/stuff/picbit/
 - [x] Canberra distance
 - [x] Bray-Curtis distance
 - [x] Combination count
-- [ ] New distances: http://calculator.vhex.net/function-index/distance / http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.pdist.html
+- [x] Chebyshev distance
+- [x] New distances: http://calculator.vhex.net/function-index/distance / http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.pdist.html
 - [ ] More palettes
 - [ ] Web Workers support
 - [ ] Create images for example section
