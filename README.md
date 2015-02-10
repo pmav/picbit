@@ -23,12 +23,11 @@ Online here: http://pmav.eu/stuff/picbit/
 - [x] Imgur export
 - [x] Add CIEDE2000 function
 - [x] Palette sorting by hue
+- [x] Combination count
 - [x] Manhattan distance
 - [x] Canberra distance
 - [x] Bray-Curtis distance
-- [x] Combination count
 - [x] Chebyshev distance
-- [x] New distances: http://calculator.vhex.net/function-index/distance / http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.pdist.html
 - [ ] More palettes
 - [ ] Web Workers support
 - [ ] Create images for example section

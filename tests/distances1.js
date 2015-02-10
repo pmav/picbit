@@ -1,5 +1,3 @@
-// This runs in node.js
-
 function rgb2lab(p) {
 
     var R = p[0];
