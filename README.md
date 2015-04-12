@@ -33,3 +33,4 @@ Online here: http://pmav.eu/stuff/picbit/
 - [ ] Create images for example section
 - [ ] New Pixel Aggregation - Mode: Sort colors by hue, http://jsfiddle.net/bg17sa9b/
 - [ ] Dithering: http://en.m.wikipedia.org/wiki/Floyd–Steinberg_dithering
+- [ ] Image kernels: http://setosa.io/ev/image-kernels/
